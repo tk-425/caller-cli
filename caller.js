@@ -12,6 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const COMMAND_FILE = path.join(__dirname, 'commands.json');
+const EXIT_OPTION = 'EXIT';
 
 function loadCommands() {
   try {
@@ -41,7 +42,7 @@ function listCommands() {
   console.log(chalk.blueBright.bold('- LIST -\n'));
 
   if (sortedCommandNames.length === 0) {
-    console.log('No commands saved!');
+    printError('No commands saved!');
     return;
   }
 
@@ -52,7 +53,8 @@ function listCommands() {
         type: 'list',
         name: 'cmd',
         message: 'Select Command',
-        choices: sortedCommandNames,
+        choices: [...sortedCommandNames, new inquirer.Separator(), EXIT_OPTION],
+        pageSize: sortedCommandNames.length + 2, // Adjust to the number of choices + 2 for the separator and the exit command
       },
     ])
     .then((answers) => {
@@ -91,6 +93,7 @@ function runCommand(name) {
   if (commands[name]) {
     const command = commands[name];
     const [cmd, ...args] = command.split(' ');
+
     console.log(
       chalk.blueBright.bold('\nRUNNING COMMAND:'),
       chalk.green(`${command}\n`)
@@ -105,8 +108,10 @@ function runCommand(name) {
     process.on('error', (err) => {
       printError(`\nError executing command '${name}': ${err.message}`);
     });
+  } else if (name === EXIT_OPTION) {
+    printSuccess('\nExiting the Caller CLI. Goodbye!');
   } else {
-    console.log(`No command found with the name '${name}'`);
+    printError(`\nNo command found with the name '${name}'`);
   }
 }
 
