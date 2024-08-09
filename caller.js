@@ -5,6 +5,8 @@ import jsonfile from 'jsonfile';
 import { spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import chalk from 'chalk';
+import inquirer from 'inquirer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,7 +29,7 @@ function addCommand(name, cmd) {
   const commands = loadCommands();
   commands[name] = cmd.join(' ');
   saveCommands(commands);
-  console.log(`Command '${name}' added.`);
+  printSuccess(`Command '${name}' added.`);
 }
 
 function listCommands() {
@@ -36,16 +38,26 @@ function listCommands() {
     a.localeCompare(b)
   );
 
-  console.log('- Commands -');
+  console.log(chalk.blueBright.bold('- LIST -\n'));
 
   if (sortedCommandNames.length === 0) {
     console.log('No commands saved!');
     return;
   }
 
-  for (const name of sortedCommandNames) {
-    console.log(`${name}: ${commands[name]}`);
-  }
+  // Selection
+  inquirer
+    .prompt([
+      {
+        type: 'list',
+        name: 'cmd',
+        message: 'Select Command',
+        choices: sortedCommandNames,
+      },
+    ])
+    .then((answers) => {
+      runCommand(answers.cmd);
+    });
 }
 
 function removeCommands(name) {
@@ -54,9 +66,9 @@ function removeCommands(name) {
   if (commands[name]) {
     delete commands[name];
     saveCommands(commands);
-    console.log(`Command '${name}' removed.`);
+    printSuccess(`Command '${name}' removed.`);
   } else {
-    console.log(`No command found with the name '${name}'`);
+    printError(`No command found with the name '${name}'`);
   }
 }
 
@@ -67,9 +79,9 @@ function renamedCommands(oldName, newName) {
     commands[newName] = commands[oldName];
     delete commands[oldName];
     saveCommands(commands);
-    console.log(`Command '${oldName}' renamed to '${newName}'`);
+    printSuccess(`Command '${oldName}' renamed to '${newName}'`);
   } else {
-    console.log(`No command found with the name '${oldName}`);
+    printError(`No command found with the name '${oldName}`);
   }
 }
 
@@ -79,20 +91,31 @@ function runCommand(name) {
   if (commands[name]) {
     const command = commands[name];
     const [cmd, ...args] = command.split(' ');
-    console.log(`\nRunning command: '${command}'\n`);
+    console.log(
+      chalk.blueBright.bold('\nRUNNING COMMAND:'),
+      chalk.green(`${command}\n`)
+    );
 
     const process = spawn(cmd, args, { stdio: 'inherit' });
 
     process.on('close', (code) => {
-      console.log(`\nCommand '${name}' exited with code ${code}`);
+      printSuccess(`\nCommand '${name}' exited with code ${code}`);
     });
 
     process.on('error', (err) => {
-      console.log(`\nError executing command '${name}': ${err.message}`);
+      printError(`\nError executing command '${name}': ${err.message}`);
     });
   } else {
     console.log(`No command found with the name '${name}'`);
   }
+}
+
+function printSuccess(str) {
+  console.log(chalk.blue(str));
+}
+
+function printError(str) {
+  console.log(chalk.red(str));
 }
 
 // Add command
