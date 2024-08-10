@@ -1,8 +1,11 @@
 {
-  "name": "caller-cli",
+  "name": "@kt425/caller-cli",
   "version": "1.0.0",
   "main": "caller.js",
   "type": "module",
+  "bin": {
+    "caller": "./caller.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
