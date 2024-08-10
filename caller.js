@@ -11,6 +11,7 @@ import {
 } from './utils-commands.js';
 
 import { gitBranches } from './utils-git.js';
+import { VERSION } from './utils.js';
 
 function main() {
   // Add command
@@ -42,6 +43,11 @@ function main() {
     .command('git')
     .description('Git commands')
     .action(() => gitBranches());
+
+  // Version commands
+  program
+    .version(VERSION)
+    .description('Caller-CLI Version');
 
   // Run command
   program
