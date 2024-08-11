@@ -10,7 +10,7 @@ import {
   renamedCommands,
 } from './utils-commands.js';
 
-import { gitBranches, gitCommit } from './utils-git.js';
+import { gitCommands } from './utils-git.js';
 import { VERSION } from './utils.js';
 
 function main() {
@@ -42,18 +42,10 @@ function main() {
   program
     .command('git')
     .description('Git commands')
-    .action(() => gitBranches());
-
-  // Commit message
-  program
-    .command('git-commit')
-    .description('Commit message')
-    .action(() => gitCommit());
+    .action(() => gitCommands());
 
   // Version commands
-  program
-    .version(VERSION)
-    .description('Caller-CLI Version');
+  program.version(VERSION).description('Caller-CLI Version');
 
   // Run command
   program

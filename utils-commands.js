@@ -59,7 +59,7 @@ export function listCommands() {
       {
         type: 'list',
         name: 'cmd',
-        message: 'Select Command',
+        message: 'Select command',
         choices: [...sortedCommandNames, new inquirer.Separator(), EXIT_OPTION],
         pageSize: sortedCommandNames.length + 2, // Adjust to the number of choices + 2 for the separator and the exit command
       },
