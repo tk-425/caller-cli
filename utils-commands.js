@@ -15,6 +15,7 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const COMMAND_FILE = '/usr/local/etc/caller-cli-commands.json';
+const BRANCH_FILE = '/usr/local/etc/caller-cli-current-branch.json';
 const EXIT_OPTION = 'EXIT';
 
 // Load commands
@@ -32,9 +33,24 @@ export function saveCommands(commands) {
 }
 
 // Add command
-export function addCommand(name, cmd) {
+export async function addCommand(name, cmd) {
   const commands = loadCommands();
   commands[name] = cmd.join(' ');
+
+  const confirmAnswer = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'confirmation',
+      message: `Are you sure you want to add "${name} - ${cmd}"?`,
+      default: false,
+    },
+  ]);
+
+  if (!confirmAnswer.confirmation) {
+    printError('\nCommand added cancelled.');
+    return;
+  }
+
   saveCommands(commands);
   printSuccess(`\nCommand '${name}' added.`);
 }
@@ -82,7 +98,7 @@ export async function removeCommands(name) {
     {
       type: 'confirm',
       name: 'confirmation',
-      message: 'Are you sure you want to rename?',
+      message: 'Are you sure you want to remove?',
       default: false,
     },
   ]);
