@@ -138,7 +138,7 @@ async function gitCommit() {
   });
 
   process.on('close', (code) => {
-    printSuccess('nSuccessfully committed.');
+    printSuccess('\nSuccessfully committed.');
   });
 
   process.on('error', (err) => {
