@@ -133,7 +133,7 @@ async function gitCommit() {
     return;
   }
 
-  const process = spawn('git', ['commit', '-m', answer.commitMessage], {
+  const process = spawn('git', ['commit', '-m', `"${answer.commitMessage}"`], {
     stdio: 'inherit',
   });
 
