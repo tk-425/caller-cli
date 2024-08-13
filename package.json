@@ -1,6 +1,6 @@
 {
   "name": "@kt425/caller-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "caller.js",
   "type": "module",
   "bin": {
@@ -15,11 +15,11 @@
   "description": "",
   "dependencies": {
     "@google/generative-ai": "^0.16.0",
-    "axios": "^1.7.3",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "inquirer": "^10.1.8",
     "jsonfile": "^6.1.0",
+    "keytar": "^7.9.0",
     "simple-git": "^3.25.0"
   }
 }

@@ -83,6 +83,13 @@ export function listCommands() {
     ])
     .then((answers) => {
       runCommand(answers.cmd);
+    })
+    .catch((err) => {
+      if (err.message.includes('User force closed the prompt')) {
+        printError(`\nProcess interrupted by user.`);
+        process.exit(1);
+      }
+      printError(`${err.message}`);
     });
 }
 
