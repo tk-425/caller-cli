@@ -19,7 +19,7 @@ let password;
 export async function aiCommands() {
   password = await getKey();
 
-  printTitle('\n- AI -\n');
+  printTitle('- AI -');
 
   try {
     if (!password) {
@@ -49,6 +49,7 @@ export async function aiCommands() {
     askAI();
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }
 
@@ -98,11 +99,14 @@ async function askAI() {
     printForceClosedError(err);
   }
 
+  // Extra line spaces
+  console.log();
+
   // Split the response into an array
   const args = commandString.trim().split(' ');
   // return and remove the first element from the args array
   const command = args.shift();
-  // Run the command
+  // Execute the command
   const process = spawn(command, args, {
     stdio: 'inherit',
   });
@@ -112,7 +116,7 @@ async function askAI() {
   });
 
   process.on('error', (err) => {
-    printError(`${err.message}'`);
+    printError(err.message);
   });
 }
 

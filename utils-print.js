@@ -13,7 +13,8 @@ export function printForceClosedError(err) {
     printError('Process interrupted by user.');
     process.exit(1);
   }
-  printError('Please try again.');
+
+  printError(err.message); 
 }
 
 export function printRunningCommand(command) {
@@ -24,7 +25,7 @@ export function printRunningCommand(command) {
 }
 
 export function printTitle(title) {
-  console.log(chalk.blueBright.bold(title));
+  console.log(`\n${chalk.blueBright.bold(title)}\n`);
 }
 
 export function printExit() {
