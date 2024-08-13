@@ -20,7 +20,7 @@ const CREATE_BRANCH = 'Create Branch';
 const GIT_COMMANDS = [ADD_ALL, COMMIT, LIST_BRANCHES, CREATE_BRANCH];
 
 export function gitCommands() {
-  printTitle('\n- GIT COMMANDS -\n');
+  printTitle('- GIT COMMANDS -');
 
   inquirer
     .prompt([
@@ -52,6 +52,7 @@ export function gitCommands() {
     })
     .catch((err) => {
       printForceClosedError(err);
+      return;
     });
 }
 
@@ -71,19 +72,23 @@ async function gitAddAll() {
       return;
     }
 
+    // Extra line spaces
+    console.log();
+
     const process = spawn('git', ['add', '-A'], {
       stdio: 'inherit',
     });
 
     process.on('close', (code) => {
-      printSuccess('Successfully added.');
+      printSuccess(`Process exited with code ${code}`);
     });
 
     process.on('error', (err) => {
-      printError(`${err.message}'`);
+      printError(err.message);
     });
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }
 
@@ -114,6 +119,7 @@ async function gitListBranches() {
     printSuccess(`Switched to branch: ${branch}\n`);
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }
 
@@ -146,12 +152,15 @@ async function gitCommit() {
       return;
     }
 
+    // Extra line spaces
+    console.log();
+
     const process = spawn('git', ['commit', '-m', answer.commitMessage], {
       stdio: 'inherit',
     });
 
     process.on('close', (code) => {
-      printSuccess('Successfully committed.');
+      printSuccess(`Process exited with code ${code}`);
     });
 
     process.on('error', (err) => {
@@ -159,6 +168,7 @@ async function gitCommit() {
     });
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }
 
@@ -191,12 +201,16 @@ async function gitCreateBranch() {
       return;
     }
 
+    // Extra line spaces
+    console.log();
+
+    // Execute the command
     const process = spawn('git', ['checkout', '-b', answer.createBranch], {
       stdio: 'inherit',
     });
 
     process.on('close', (code) => {
-      printSuccess('Successfully committed.');
+      printSuccess(`Process exited with code ${code}`);
     });
 
     process.on('error', (err) => {
@@ -204,5 +218,6 @@ async function gitCreateBranch() {
     });
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }

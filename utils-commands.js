@@ -1,5 +1,5 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+// import path from 'path';
+// import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
 import jsonfile from 'jsonfile';
 import inquirer from 'inquirer';
@@ -14,11 +14,10 @@ import {
 } from './utils-print.js';
 import { EXIT_OPTION } from './utils.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 const COMMAND_FILE = '/usr/local/etc/caller-cli-commands.json';
-const KEY_FILE = '/usr/local/etc/caller-cli-keys.json';
-const BRANCH_FILE = '/usr/local/etc/caller-cli-current-branch.json';
+// const BRANCH_FILE = '/usr/local/etc/caller-cli-current-branch.json';
 
 // Load commands
 export function loadCommands() {
@@ -39,6 +38,8 @@ export async function addCommand(name, cmd) {
   const commands = loadCommands();
   commands[name] = cmd.join(' ');
 
+  printTitle('- Add -');
+
   try {
     const confirmAnswer = await inquirer.prompt([
       {
@@ -58,6 +59,7 @@ export async function addCommand(name, cmd) {
     printSuccess(`Command '${name}' added.`);
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }
 
@@ -68,7 +70,7 @@ export function listCommands() {
     a.localeCompare(b)
   );
 
-  printTitle('\n- LIST -\n');
+  printTitle('- LIST -');
 
   if (sortedCommandNames.length === 0) {
     printError('No commands saved!');
@@ -91,6 +93,7 @@ export function listCommands() {
     })
     .catch((err) => {
       printForceClosedError(err);
+      return;
     });
 }
 
@@ -102,6 +105,8 @@ export async function removeCommands(name) {
     printError(`No command found with the name '${name}'`);
     return;
   }
+
+  printTitle('- Remove -');
 
   try {
     const answer = await inquirer.prompt([
@@ -123,6 +128,7 @@ export async function removeCommands(name) {
     printSuccess(`Command '${name}' removed.`);
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }
 
@@ -139,6 +145,8 @@ export async function renamedCommands(oldName, newName) {
     printError(`No command found with the name '${oldName}'`);
     return;
   }
+
+  printTitle('- Rename -');
 
   try {
     const answer = await inquirer.prompt([
@@ -161,6 +169,7 @@ export async function renamedCommands(oldName, newName) {
     printSuccess(`Command '${oldName}' renamed to '${newName}'`);
   } catch (err) {
     printForceClosedError(err);
+    return;
   }
 }
 

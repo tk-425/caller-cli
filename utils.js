@@ -1,2 +1,2 @@
-export const VERSION = 'v1.0.1';
+export const VERSION = 'v1.1.0';
 export const EXIT_OPTION = 'EXIT';
