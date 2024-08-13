@@ -10,6 +10,7 @@ import {
   printTitle,
   printExit,
   printRunningCommand,
+  printForceClosedError,
 } from './utils-print.js';
 import { EXIT_OPTION } from './utils.js';
 
@@ -38,22 +39,26 @@ export async function addCommand(name, cmd) {
   const commands = loadCommands();
   commands[name] = cmd.join(' ');
 
-  const confirmAnswer = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message: `Are you sure you want to add "${name} - ${cmd}"?`,
-      default: false,
-    },
-  ]);
+  try {
+    const confirmAnswer = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirmation',
+        message: `Are you sure you want to add "${name}"?`,
+        default: false,
+      },
+    ]);
 
-  if (!confirmAnswer.confirmation) {
-    printError('\nCommand added cancelled.');
-    return;
+    if (!confirmAnswer.confirmation) {
+      printError('\nCommand added cancelled.');
+      return;
+    }
+
+    saveCommands(commands);
+    printSuccess(`\nCommand '${name}' added.`);
+  } catch (err) {
+    printForceClosedError(err);
   }
-
-  saveCommands(commands);
-  printSuccess(`\nCommand '${name}' added.`);
 }
 
 // List commands
@@ -85,11 +90,7 @@ export function listCommands() {
       runCommand(answers.cmd);
     })
     .catch((err) => {
-      if (err.message.includes('User force closed the prompt')) {
-        printError(`\nProcess interrupted by user.`);
-        process.exit(1);
-      }
-      printError(`${err.message}`);
+      printForceClosedError(err);
     });
 }
 
@@ -102,23 +103,27 @@ export async function removeCommands(name) {
     return;
   }
 
-  const answer = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message: 'Are you sure you want to remove?',
-      default: false,
-    },
-  ]);
+  try {
+    const answer = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirmation',
+        message: 'Are you sure you want to remove?',
+        default: false,
+      },
+    ]);
 
-  if (!answer.confirmation) {
-    printError('\nRename cancelled.');
-    return;
+    if (!answer.confirmation) {
+      printError('\nRename cancelled.');
+      return;
+    }
+
+    delete commands[name];
+    saveCommands(commands);
+    printSuccess(`\nCommand '${name}' removed.`);
+  } catch (err) {
+    printForceClosedError(err);
   }
-
-  delete commands[name];
-  saveCommands(commands);
-  printSuccess(`\nCommand '${name}' removed.`);
 }
 
 // Rename command
@@ -135,24 +140,28 @@ export async function renamedCommands(oldName, newName) {
     return;
   }
 
-  const answer = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message: 'Are you sure you want to rename?',
-      default: false,
-    },
-  ]);
+  try {
+    const answer = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirmation',
+        message: 'Are you sure you want to rename?',
+        default: false,
+      },
+    ]);
 
-  if (!answer.confirmation) {
-    printError('\nRename cancelled.');
-    return;
+    if (!answer.confirmation) {
+      printError('\nRename cancelled.');
+      return;
+    }
+
+    commands[newName] = commands[oldName];
+    delete commands[oldName];
+    saveCommands(commands);
+    printSuccess(`\nCommand '${oldName}' renamed to '${newName}'`);
+  } catch (err) {
+    printForceClosedError(err);
   }
-
-  commands[newName] = commands[oldName];
-  delete commands[oldName];
-  saveCommands(commands);
-  printSuccess(`\nCommand '${oldName}' renamed to '${newName}'`);
 }
 
 // Run the command

@@ -1,6 +1,12 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import inquirer from 'inquirer';
-import { printError, printSuccess, printTitle } from './utils-print.js';
+import { spawn } from 'child_process';
+import {
+  printError,
+  printForceClosedError,
+  printSuccess,
+  printTitle,
+} from './utils-print.js';
 import { deleteKey, getKey, saveKey } from './keyManagement.js';
 
 let genAI;
@@ -40,16 +46,13 @@ export async function aiCommands() {
 
     askAI();
   } catch (err) {
-    if (err.message.includes('User force closed the prompt')) {
-      printError(`\nProcess interrupted by user.`);
-      process.exit(1);
-    }
-
-    printError(`\n${err.message}`);
+    printForceClosedError(err);
   }
 }
 
 async function askAI() {
+  let commandString;
+
   try {
     const answer = await inquirer.prompt([
       {
@@ -67,15 +70,43 @@ async function askAI() {
     const prompt = `Act as a command-line command oracle. Provide only the command as an answer to any question about command-line commands. Do not offer explanations or additional information (no code block). Here is the question "${answer.aiQuestion}?" If the answer is not related to the command-line commands, answer the question with 'Please provide a question related to command-line commands.'`;
 
     const result = await model.generateContent(prompt);
-    console.log('\n', result.response.text());
-  } catch (err) {
-    if (err.message.includes('User force closed the prompt')) {
-      printError(`\nProcess interrupted by user.`);
-      process.exit(1);
+    commandString = result.response.text();
+
+    console.log('\n', commandString);
+
+    const confirm = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirmation',
+        message: 'Would you like to run the command?',
+        default: false,
+      },
+    ]);
+
+    if (!confirm.confirmation) {
+      printError('\nRename cancelled.');
+      return;
     }
-    printError('\nPlease try again.');
-    printError(`${err.message}`);
+  } catch (err) {
+    printForceClosedError(err);
   }
+
+  // Split the response into an array
+  const args = commandString.trim().split(' ');
+  // return and remove the first element from the args array
+  const command = args.shift();
+  // Run the command
+  const process = spawn(command, args, {
+    stdio: 'inherit',
+  });
+
+  process.on('close', (code) => {
+    printSuccess(`\nProcess exited with code ${code}`);
+  });
+
+  process.on('error', (err) => {
+    printError(`\n${err.message}'`);
+  });
 }
 
 export async function deleteAPIKey() {

@@ -7,6 +7,7 @@ import {
   printError,
   printTitle,
   printExit,
+  printForceClosedError,
 } from './utils-print.js';
 import { EXIT_OPTION } from './utils.js';
 
@@ -48,35 +49,42 @@ export function gitCommands() {
         case EXIT_OPTION:
           printExit();
       }
+    })
+    .catch((err) => {
+      printForceClosedError(err);
     });
 }
 
 async function gitAddAll() {
-  const confirmAnswer = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message: 'Are you sure you want to add all?',
-      default: false,
-    },
-  ]);
+  try {
+    const confirmAnswer = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirmation',
+        message: 'Are you sure you want to add all?',
+        default: false,
+      },
+    ]);
 
-  if (!confirmAnswer.confirmation) {
-    printError('\nGit added cancelled.');
-    return;
+    if (!confirmAnswer.confirmation) {
+      printError('\nGit added cancelled.');
+      return;
+    }
+
+    const process = spawn('git', ['add', '-A'], {
+      stdio: 'inherit',
+    });
+
+    process.on('close', (code) => {
+      printSuccess('\nSuccessfully added.');
+    });
+
+    process.on('error', (err) => {
+      printError(`\n${err.message}'`);
+    });
+  } catch (err) {
+    printForceClosedError(err);
   }
-
-  const process = spawn('git', ['add', '-A'], {
-    stdio: 'inherit',
-  });
-
-  process.on('close', (code) => {
-    printSuccess('\nSuccessfully added.');
-  });
-
-  process.on('error', (err) => {
-    printError(`\n${err.message}'`);
-  });
 }
 
 async function gitListBranches() {
@@ -105,11 +113,7 @@ async function gitListBranches() {
     await git.checkout(branch);
     printSuccess(`\nSwitched to branch: ${branch}\n`);
   } catch (err) {
-    if (err.message.includes('User force closed the prompt')) {
-      printError(`\nProcess interrupted by user.`);
-      process.exit(1);
-    }
-    printError(`\n${err.message}`);
+    printForceClosedError(err);
   }
 }
 
@@ -154,12 +158,7 @@ async function gitCommit() {
       printError(`\n${err.message}'`);
     });
   } catch (err) {
-    if (err.message.includes('User force closed the prompt')) {
-      printError(`\nProcess interrupted by user.`);
-      process.exit(1);
-    }
-
-    printError(`\n${err.message}`);
+    printForceClosedError(err);
   }
 }
 
@@ -204,11 +203,6 @@ async function gitCreateBranch() {
       printError(`\n${err.message}'`);
     });
   } catch (err) {
-    if (err.message.includes('User force closed the prompt')) {
-      printError(`\nProcess interrupted by user.`);
-      process.exit(1);
-    }
-
-    printError(`\n${err.message}`);
+    printForceClosedError(err);
   }
 }
