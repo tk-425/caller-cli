@@ -11,7 +11,7 @@ import {
 } from './utils-commands.js';
 import { gitCommands } from './utils-git.js';
 import { VERSION } from './utils.js';
-import { aiCommands } from './utils-ai.js';
+import { aiCommands, deleteAPIKey } from './utils-ai.js';
 
 function main() {
   // Add command
@@ -49,6 +49,12 @@ function main() {
     .command('ai')
     .description('AI command')
     .action(() => aiCommands());
+
+  // Delete API key
+  program
+    .command('del key')
+    .description('Delete API key')
+    .action(() => deleteAPIKey());
 
   // Version commands
   program.version(VERSION).description('Caller-CLI Version');

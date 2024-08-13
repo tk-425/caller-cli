@@ -105,6 +105,10 @@ async function gitListBranches() {
     await git.checkout(branch);
     printSuccess(`\nSwitched to branch: ${branch}\n`);
   } catch (err) {
+    if (err.message.includes('User force closed the prompt')) {
+      printError(`\nProcess interrupted by user.`);
+      process.exit(1);
+    }
     printError(`\n${err.message}`);
   }
 }

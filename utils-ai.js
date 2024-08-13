@@ -1,31 +1,43 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import inquirer from 'inquirer';
-import { printError } from './utils-print.js';
+import { printError, printSuccess, printTitle } from './utils-print.js';
+import { deleteKey, getKey, saveKey } from './keyManagement.js';
 
 let genAI;
 let model;
 let key;
+let password;
 
 export async function aiCommands() {
-  try {
-    const answer = await inquirer.prompt([
-      {
-        type: 'password',
-        name: 'apiKey',
-        message: 'Enter your Gemini API key:',
-        mask: '*',
-      },
-    ]);
+  password = await getKey();
 
-    if (!answer.apiKey) {
-      printError(`\nYou must provide an API key.`);
-      return;
+  printTitle('\n- AI -\n');
+
+  try {
+    if (!password) {
+      const answer = await inquirer.prompt([
+        {
+          type: 'password',
+          name: 'apiKey',
+          message: 'Enter your Gemini API key:',
+          mask: '*',
+        },
+      ]);
+
+      if (!answer.apiKey) {
+        printError(`\nYou must provide an API key.`);
+        return;
+      }
+
+      key = answer.apiKey;
+      saveKey(answer.apiKey);
+    } else {
+      key = await getKey();
     }
 
-    key = answer.apiKey;
     genAI = new GoogleGenerativeAI(key);
     model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    
+
     askAI();
   } catch (err) {
     if (err.message.includes('User force closed the prompt')) {
@@ -37,7 +49,7 @@ export async function aiCommands() {
   }
 }
 
-export async function askAI() {
+async function askAI() {
   try {
     const answer = await inquirer.prompt([
       {
@@ -64,4 +76,14 @@ export async function askAI() {
     printError('\nPlease try again.');
     printError(`${err.message}`);
   }
+}
+
+export async function deleteAPIKey() {
+  await deleteKey()
+    .then(() => {
+      printSuccess('\nAPI key deleted.');
+    })
+    .catch((err) => {
+      printError('\nError deleting API key: ' + err.message);
+    });
 }
