@@ -67,7 +67,7 @@ async function gitAddAll() {
     ]);
 
     if (!confirmAnswer.confirmation) {
-      printError('\nGit added cancelled.');
+      printError('Git added cancelled.');
       return;
     }
 
@@ -76,11 +76,11 @@ async function gitAddAll() {
     });
 
     process.on('close', (code) => {
-      printSuccess('\nSuccessfully added.');
+      printSuccess('Successfully added.');
     });
 
     process.on('error', (err) => {
-      printError(`\n${err.message}'`);
+      printError(`${err.message}'`);
     });
   } catch (err) {
     printForceClosedError(err);
@@ -111,7 +111,7 @@ async function gitListBranches() {
 
     // Checkout selected branches
     await git.checkout(branch);
-    printSuccess(`\nSwitched to branch: ${branch}\n`);
+    printSuccess(`Switched to branch: ${branch}\n`);
   } catch (err) {
     printForceClosedError(err);
   }
@@ -128,7 +128,7 @@ async function gitCommit() {
     ]);
 
     if (!answer.commitMessage) {
-      printError(`\nYou must provide a commit message.`);
+      printError('You must provide a commit message.');
       return;
     }
 
@@ -142,7 +142,7 @@ async function gitCommit() {
     ]);
 
     if (!confirmAnswer.confirmation) {
-      printError('\nGit commit cancelled.');
+      printError('Git commit cancelled.');
       return;
     }
 
@@ -151,11 +151,11 @@ async function gitCommit() {
     });
 
     process.on('close', (code) => {
-      printSuccess('\nSuccessfully committed.');
+      printSuccess('Successfully committed.');
     });
 
     process.on('error', (err) => {
-      printError(`\n${err.message}'`);
+      printError(`${err.message}'`);
     });
   } catch (err) {
     printForceClosedError(err);
@@ -173,7 +173,7 @@ async function gitCreateBranch() {
     ]);
 
     if (!answer.createBranch) {
-      printError(`\nYou must provide a branch name.`);
+      printError('You must provide a branch name.');
       return;
     }
 
@@ -187,7 +187,7 @@ async function gitCreateBranch() {
     ]);
 
     if (!confirmAnswer.confirmation) {
-      printError('\nGit branch creation cancelled.');
+      printError('Git branch creation cancelled.');
       return;
     }
 
@@ -196,11 +196,11 @@ async function gitCreateBranch() {
     });
 
     process.on('close', (code) => {
-      printSuccess('\nSuccessfully committed.');
+      printSuccess('Successfully committed.');
     });
 
     process.on('error', (err) => {
-      printError(`\n${err.message}'`);
+      printError(`${err.message}'`);
     });
   } catch (err) {
     printForceClosedError(err);

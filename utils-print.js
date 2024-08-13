@@ -1,19 +1,19 @@
 import chalk from 'chalk';
 
 export function printSuccess(msg) {
-  console.log(chalk.blueBright(msg));
+  console.log(`\n${chalk.blueBright(msg)}`);
 }
 
 export function printError(err) {
-  console.log(chalk.redBright(err));
+  console.log(`\n${chalk.redBright(err)}`);
 }
 
 export function printForceClosedError(err) {
   if (err.message.includes('User force closed the prompt')) {
-    printError(`\nProcess interrupted by user.`);
+    printError('Process interrupted by user.');
     process.exit(1);
   }
-  printError('\nPlease try again.');
+  printError('Please try again.');
 }
 
 export function printRunningCommand(command) {
@@ -28,5 +28,5 @@ export function printTitle(title) {
 }
 
 export function printExit() {
-  printSuccess('\nExiting the Caller CLI. Goodbye!');
+  printSuccess('Exiting the Caller CLI. Goodbye!');
 }

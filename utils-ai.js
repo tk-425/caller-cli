@@ -9,6 +9,8 @@ import {
 } from './utils-print.js';
 import { deleteKey, getKey, saveKey } from './keyManagement.js';
 
+const invalidQuestionMessage =
+  'Please provide a question related to command-line commands.';
 let genAI;
 let model;
 let key;
@@ -31,7 +33,7 @@ export async function aiCommands() {
       ]);
 
       if (!answer.apiKey) {
-        printError(`\nYou must provide an API key.`);
+        printError('You must provide an API key.');
         return;
       }
 
@@ -63,14 +65,19 @@ async function askAI() {
     ]);
 
     if (!answer.aiQuestion) {
-      printError(`\nYou must provide a question.`);
+      printError('You must provide a question.');
       return;
     }
 
-    const prompt = `Act as a command-line command oracle. Provide only the command as an answer to any question about command-line commands. Do not offer explanations or additional information (no code block). Here is the question "${answer.aiQuestion}?" If the answer is not related to the command-line commands, answer the question with 'Please provide a question related to command-line commands.'`;
+    const prompt = `Act as a command-line command oracle. Provide only the command as an answer to any question about command-line commands. Do not offer explanations or additional information (no code block). Here is the question "${answer.aiQuestion}?" If the answer is not related to the command-line commands, answer the question with '${invalidQuestionMessage}'`;
 
     const result = await model.generateContent(prompt);
     commandString = result.response.text();
+
+    if (commandString.includes(invalidQuestionMessage)) {
+      printError(invalidQuestionMessage);
+      return;
+    }
 
     console.log('\n', commandString);
 
@@ -84,7 +91,7 @@ async function askAI() {
     ]);
 
     if (!confirm.confirmation) {
-      printError('\nRename cancelled.');
+      printError('Rename cancelled.');
       return;
     }
   } catch (err) {
@@ -101,20 +108,20 @@ async function askAI() {
   });
 
   process.on('close', (code) => {
-    printSuccess(`\nProcess exited with code ${code}`);
+    printSuccess(`Process exited with code ${code}`);
   });
 
   process.on('error', (err) => {
-    printError(`\n${err.message}'`);
+    printError(`${err.message}'`);
   });
 }
 
 export async function deleteAPIKey() {
   await deleteKey()
     .then(() => {
-      printSuccess('\nAPI key deleted.');
+      printSuccess('API key deleted.');
     })
     .catch((err) => {
-      printError('\nError deleting API key: ' + err.message);
+      printError('Error deleting API key: ' + err.message);
     });
 }
