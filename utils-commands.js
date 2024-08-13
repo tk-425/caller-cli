@@ -50,12 +50,12 @@ export async function addCommand(name, cmd) {
     ]);
 
     if (!confirmAnswer.confirmation) {
-      printError('\nCommand added cancelled.');
+      printError('Command added cancelled.');
       return;
     }
 
     saveCommands(commands);
-    printSuccess(`\nCommand '${name}' added.`);
+    printSuccess(`Command '${name}' added.`);
   } catch (err) {
     printForceClosedError(err);
   }
@@ -71,7 +71,7 @@ export function listCommands() {
   printTitle('\n- LIST -\n');
 
   if (sortedCommandNames.length === 0) {
-    printError('\nNo commands saved!');
+    printError('No commands saved!');
     return;
   }
 
@@ -99,7 +99,7 @@ export async function removeCommands(name) {
   const commands = loadCommands();
 
   if (!commands[name]) {
-    printError(`\nNo command found with the name '${name}'`);
+    printError(`No command found with the name '${name}'`);
     return;
   }
 
@@ -114,13 +114,13 @@ export async function removeCommands(name) {
     ]);
 
     if (!answer.confirmation) {
-      printError('\nRename cancelled.');
+      printError('Rename cancelled.');
       return;
     }
 
     delete commands[name];
     saveCommands(commands);
-    printSuccess(`\nCommand '${name}' removed.`);
+    printSuccess(`Command '${name}' removed.`);
   } catch (err) {
     printForceClosedError(err);
   }
@@ -129,14 +129,14 @@ export async function removeCommands(name) {
 // Rename command
 export async function renamedCommands(oldName, newName) {
   if (oldName === newName) {
-    printError(`\nOld name and new name cannot be the same.`);
+    printError('Old name and new name cannot be the same.');
     return;
   }
 
   const commands = loadCommands();
 
   if (!commands[oldName]) {
-    printError(`\nNo command found with the name '${oldName}'`);
+    printError(`No command found with the name '${oldName}'`);
     return;
   }
 
@@ -151,14 +151,14 @@ export async function renamedCommands(oldName, newName) {
     ]);
 
     if (!answer.confirmation) {
-      printError('\nRename cancelled.');
+      printError('Rename cancelled.');
       return;
     }
 
     commands[newName] = commands[oldName];
     delete commands[oldName];
     saveCommands(commands);
-    printSuccess(`\nCommand '${oldName}' renamed to '${newName}'`);
+    printSuccess(`Command '${oldName}' renamed to '${newName}'`);
   } catch (err) {
     printForceClosedError(err);
   }
@@ -178,15 +178,15 @@ export function runCommand(name) {
     const process = spawn(cmd, args, { stdio: 'inherit' });
 
     process.on('close', (code) => {
-      printSuccess(`\nCommand '${name}' exited with code ${code}`);
+      printSuccess(`Command '${name}' exited with code ${code}`);
     });
 
     process.on('error', (err) => {
-      printError(`\nError executing command '${name}: ${err.message}'`);
+      printError(`Error executing command '${name}: ${err.message}'`);
     });
   } else if (name === EXIT_OPTION) {
     printExit();
   } else {
-    printError(`\nNo command found with the name '${name}'`);
+    printError(`No command found with the name '${name}'`);
   }
 }
