@@ -8,14 +8,15 @@ import {
   printTitle,
   printExit,
 } from './utils-print.js';
+import { EXIT_OPTION } from './utils.js';
 
 const git = simpleGit();
-const EXIT_OPTION = 'EXIT';
 
 const ADD_ALL = 'Add All';
 const LIST_BRANCHES = 'List Branches';
 const COMMIT = 'Commit';
-const GIT_COMMANDS = [ADD_ALL, LIST_BRANCHES, COMMIT];
+const CREATE_BRANCH = 'Create Branch';
+const GIT_COMMANDS = [ADD_ALL, COMMIT, LIST_BRANCHES, CREATE_BRANCH];
 
 export function gitCommands() {
   printTitle('\n- GIT COMMANDS -\n');
@@ -41,6 +42,9 @@ export function gitCommands() {
         case COMMIT:
           gitCommit();
           return;
+        case CREATE_BRANCH:
+          gitCreateBranch();
+          return;
         case EXIT_OPTION:
           printExit();
       }
@@ -62,7 +66,7 @@ async function gitAddAll() {
     return;
   }
 
-  const process = spawn('git', ['add', '.'], {
+  const process = spawn('git', ['add', '-A'], {
     stdio: 'inherit',
   });
 
@@ -71,7 +75,7 @@ async function gitAddAll() {
   });
 
   process.on('error', (err) => {
-    printError(`\nError: ${err.message}'`);
+    printError(`\n${err.message}'`);
   });
 }
 
@@ -106,42 +110,101 @@ async function gitListBranches() {
 }
 
 async function gitCommit() {
-  const answer = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'commitMessage',
-      message: 'Commit Message:',
-    },
-  ]);
+  try {
+    const answer = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'commitMessage',
+        message: 'Commit Message:',
+      },
+    ]);
 
-  if (!answer.commitMessage) {
-    printError(`\nYou must provide a commit message.`);
-    return;
+    if (!answer.commitMessage) {
+      printError(`\nYou must provide a commit message.`);
+      return;
+    }
+
+    const confirmAnswer = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirmation',
+        message: `Are you sure you want to commit with\n"${answer.commitMessage}"?`,
+        default: false,
+      },
+    ]);
+
+    if (!confirmAnswer.confirmation) {
+      printError('\nGit commit cancelled.');
+      return;
+    }
+
+    const process = spawn('git', ['commit', '-m', answer.commitMessage], {
+      stdio: 'inherit',
+    });
+
+    process.on('close', (code) => {
+      printSuccess('\nSuccessfully committed.');
+    });
+
+    process.on('error', (err) => {
+      printError(`\n${err.message}'`);
+    });
+  } catch (err) {
+    if (err.message.includes('User force closed the prompt')) {
+      printError(`\nProcess interrupted by user.`);
+      process.exit(1);
+    }
+
+    printError(`\n${err.message}`);
   }
+}
 
-  const confirmAnswer = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message: `Are you sure you want to commit with\n"${answer.commitMessage}"?`,
-      default: false,
-    },
-  ]);
+async function gitCreateBranch() {
+  try {
+    const answer = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'createBranch',
+        message: 'Create a new branch:',
+      },
+    ]);
 
-  if (!confirmAnswer.confirmation) {
-    printError('\nGit commit cancelled.');
-    return;
+    if (!answer.createBranch) {
+      printError(`\nYou must provide a branch name.`);
+      return;
+    }
+
+    const confirmAnswer = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirmation',
+        message: `Are you sure you want to create a branch named "${answer.createBranch}"?`,
+        default: false,
+      },
+    ]);
+
+    if (!confirmAnswer.confirmation) {
+      printError('\nGit branch creation cancelled.');
+      return;
+    }
+
+    const process = spawn('git', ['checkout', '-b', answer.createBranch], {
+      stdio: 'inherit',
+    });
+
+    process.on('close', (code) => {
+      printSuccess('\nSuccessfully committed.');
+    });
+
+    process.on('error', (err) => {
+      printError(`\n${err.message}'`);
+    });
+  } catch (err) {
+    if (err.message.includes('User force closed the prompt')) {
+      printError(`\nProcess interrupted by user.`);
+      process.exit(1);
+    }
+
+    printError(`\n${err.message}`);
   }
-
-  const process = spawn('git', ['commit', '-m', answer.commitMessage], {
-    stdio: 'inherit',
-  });
-
-  process.on('close', (code) => {
-    printSuccess('\nSuccessfully committed.');
-  });
-
-  process.on('error', (err) => {
-    printError(`\nError: ${err.message}'`);
-  });
 }

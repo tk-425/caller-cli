@@ -11,12 +11,13 @@ import {
   printExit,
   printRunningCommand,
 } from './utils-print.js';
+import { EXIT_OPTION } from './utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const COMMAND_FILE = '/usr/local/etc/caller-cli-commands.json';
+const KEY_FILE = '/usr/local/etc/caller-cli-keys.json';
 const BRANCH_FILE = '/usr/local/etc/caller-cli-current-branch.json';
-const EXIT_OPTION = 'EXIT';
 
 // Load commands
 export function loadCommands() {
