@@ -9,9 +9,9 @@ import {
   removeCommands,
   renamedCommands,
 } from './utils-commands.js';
-
 import { gitCommands } from './utils-git.js';
 import { VERSION } from './utils.js';
+import { aiCommands } from './utils-ai.js';
 
 function main() {
   // Add command
@@ -43,6 +43,12 @@ function main() {
     .command('git')
     .description('Git commands')
     .action(() => gitCommands());
+
+  // AI command
+  program
+    .command('ai')
+    .description('AI command')
+    .action(() => aiCommands());
 
   // Version commands
   program.version(VERSION).description('Caller-CLI Version');
