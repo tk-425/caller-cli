@@ -16,7 +16,7 @@ import { EXIT_OPTION } from './utils.js';
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
-const COMMAND_FILE = '/usr/local/etc/caller-cli-commands.json';
+const COMMAND_FILE = '/usr/local/share/caller-cli-commands.json';
 // const BRANCH_FILE = '/usr/local/etc/caller-cli-current-branch.json';
 
 // Load commands
