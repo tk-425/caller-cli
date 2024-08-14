@@ -25,7 +25,7 @@ export function loadCommands() {
     return jsonfile.readFileSync(COMMAND_FILE);
   } catch (err) {
     // If there is no command file then create a new one
-    jsonfile.writeFileSync(COMMAND_FILE, {}, { spaces: 4 });
+    jsonfile.writeFileSync(COMMAND_FILE, {}, { spaces: 4, permission: 0o644 });
     return {};
   }
 }
