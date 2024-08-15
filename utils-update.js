@@ -34,6 +34,7 @@ export async function update() {
       'main',
     ];
 
+    // Git pull request
     const pullProcess = spawn(GIT_COMMAND, pullArgs, { stdio: 'inherit' });
 
     pullProcess.on('close', (code) => {
@@ -44,9 +45,12 @@ export async function update() {
       printError(err.message);
     });
 
-    const npmUpdateArgs = 'update';
-
-    const npmUpdateProcess = spawn(NPM_COMMAND, npmUpdateArgs, { stdio: 'inherit' });
+    // Update npm package
+    const npmUpdateProcess = spawn(
+      'sh',
+      ['-c', 'cd /usr/local/share/caller-cli && npm update && cd -'],
+      { stdio: 'inherit' }
+    );
 
     npmUpdateProcess.on('close', (code) => {
       printSuccess('NPM successfully updated.');
@@ -56,9 +60,14 @@ export async function update() {
       printError(err.message);
     });
 
-    const npmInstallArgs = 'install';
-
-    const npmInstallProcess = spawn(NPM_COMMAND, npmInstallArgs, { stdio: 'inherit' });
+    // install new npm packages
+    const npmInstallProcess = spawn(
+      'sh',
+      ['-c', 'cd /usr/local/share/caller-cli && npm install && cd -'],
+      {
+        stdio: 'inherit',
+      }
+    );
 
     npmInstallProcess.on('close', (code) => {
       printSuccess('NPM successfully installed.');
