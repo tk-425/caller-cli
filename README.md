@@ -11,6 +11,9 @@
    sudo mv /path/to/repository/ /usr/local/share
    ```
 3. Go to the `/usr/local/share/caller-cli` directory
+   ```bash
+   cd /usr/local/share/caller-cli
+   ```
 4. Make the `caller.js` script executable:
    ```bash
    chmod +x caller.js
