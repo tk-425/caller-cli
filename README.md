@@ -1,6 +1,5 @@
 # Caller CLI
 
-
 ## Installation
 
 1. To install Caller CLI, follow these steps:
@@ -30,9 +29,10 @@
 7. Restart your terminal
 8. Use `caller <command>` to run the Caller-CLI command
 
-
 ## Commands
+
 ### List Commands
+
 ```bash
 caller list
 ```
@@ -40,6 +40,7 @@ caller list
 Display a list of all commands currently registered with Caller CLI.
 
 Example
+
 ```bash
 $ caller list
 
@@ -53,8 +54,8 @@ $ caller list
   EXIT
 ```
 
-
 ### Add a Command
+
 ```bash
 caller add <name> <command>
 ```
@@ -62,14 +63,15 @@ caller add <name> <command>
 Add a new command to Caller CLI.
 
 Example
+
 ```bash
 $ caller add npm-global-list 'npm list -g'
 ```
 
 This will add a new command named `npm-global-list` that runs the command `npm list -g` when invoked.
 
-
 ### Rename a Command
+
 ```bash
 caller rename <old_name> <new_name>
 ```
@@ -77,12 +79,13 @@ caller rename <old_name> <new_name>
 Rename an existing command.
 
 Example
+
 ```bash
 $ caller rename npm-global-list npm-list-global
 ```
 
-
 ### Remove a Command
+
 ```bash
 caller remove <name>
 ```
@@ -90,19 +93,21 @@ caller remove <name>
 Remove a command from Caller CLI.
 
 Example
+
 ```bash
 $ caller remove npm-list-global
 ```
 
-
 ### Git
+
 ```bash
 caller git
 ```
 
-Access various Git commands.
+Access various Git commands. We will add more Git commands later.
 
 Example
+
 ```bash
 $ caller git
 
@@ -117,8 +122,8 @@ $ caller git
   EXIT
 ```
 
-
 ### AI Command
+
 ```bash
 caller ai
 ```
@@ -126,6 +131,7 @@ caller ai
 Use AI to find a command. Please create a Gemini API key by following these [instructions](https://ai.google.dev/gemini-api/docs/api-key).
 
 Example
+
 ```bash
 $ caller ai
 
@@ -139,25 +145,29 @@ npm list -g
 ? Would you like to run the command? (y/N)
 ```
 
-Please only ask questions about command-line commands. Otherwise, AI will not answer your questions.
+Please only ask questions about command-line commands. Otherwise, the AI will respond with `Please provide a question related to command-line commands`.
+
+> Note: Your API key is securely stored using the [keytar](https://www.npmjs.com/package/keytar) npm package and saved in your system's keychain.
 
 
 ### Delete API Key
+
 ```bash
 caller del key
 ```
-Delete the stored API key.
 
+Delete the stored Gemini API key.
 
 ### Update
+
 ```bash
 caller update
 ```
 
 Update Caller CLI to the latest available version.
 
-
 ### Version
+
 ```bash
 caller -V
 caller --version
