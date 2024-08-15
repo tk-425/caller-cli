@@ -34,3 +34,10 @@ Update Caller-CLI:
    ```bash
    caller update
    ```
+
+Check version:
+   ```bash
+   caller -V
+   caller --version
+   ```
+
