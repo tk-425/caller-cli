@@ -42,7 +42,7 @@ export async function update() {
     });
 
     pullProcess.on('error', (err) => {
-      printError(err.message);
+      printError(`Update failed: ${err.message}`);
     });
 
     // Update npm package
