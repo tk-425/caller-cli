@@ -27,6 +27,8 @@ export async function update() {
     }
 
     const args = [
+      '-C',
+      '/usr/local/share/caller-cli',
       'pull',
       'origin',
       'main',
