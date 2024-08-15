@@ -95,7 +95,6 @@ export function listCommands() {
     })
     .catch((err) => {
       printForceClosedError(err);
-      return;
     });
 }
 
