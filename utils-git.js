@@ -9,7 +9,7 @@ import {
   printExit,
   printForceClosedError,
 } from './utils-print.js';
-import { EXIT_OPTION } from './utils.js';
+import { EXIT_OPTION, GIT_COMMAND } from './utils.js';
 
 const git = simpleGit();
 
@@ -52,7 +52,6 @@ export function gitCommands() {
     })
     .catch((err) => {
       printForceClosedError(err);
-      return;
     });
 }
 
@@ -75,7 +74,7 @@ async function gitAddAll() {
     // Extra line spaces
     console.log();
 
-    const process = spawn('git', ['add', '-A'], {
+    const process = spawn(GIT_COMMAND, ['add', '-A'], {
       stdio: 'inherit',
     });
 
@@ -155,7 +154,7 @@ async function gitCommit() {
     // Extra line spaces
     console.log();
 
-    const process = spawn('git', ['commit', '-m', answer.commitMessage], {
+    const process = spawn(GIT_COMMAND, ['commit', '-m', answer.commitMessage], {
       stdio: 'inherit',
     });
 
@@ -205,7 +204,7 @@ async function gitCreateBranch() {
     console.log();
 
     // Execute the command
-    const process = spawn('git', ['checkout', '-b', answer.createBranch], {
+    const process = spawn(GIT_COMMAND, ['checkout', '-b', answer.createBranch], {
       stdio: 'inherit',
     });
 

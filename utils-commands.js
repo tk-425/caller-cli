@@ -16,7 +16,7 @@ import { EXIT_OPTION } from './utils.js';
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
-const COMMAND_FILE = '/usr/local/share/caller-cli-commands.json';
+const COMMAND_FILE = '/usr/local/share/caller-cli-main/caller-cli-commands.json';
 // const BRANCH_FILE = '/usr/local/etc/caller-cli-current-branch.json';
 
 // Load commands
@@ -24,8 +24,8 @@ export function loadCommands() {
   try {
     return jsonfile.readFileSync(COMMAND_FILE);
   } catch (err) {
-    // If there is no command file then create a new one
-    jsonfile.writeFileSync(COMMAND_FILE, {}, { spaces: 4, permission: 0o644 });
+    // // If there is no command file then create a new one
+    // jsonfile.writeFileSync(COMMAND_FILE, {}, { spaces: 4 });
     return {};
   }
 }

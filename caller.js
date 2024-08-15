@@ -12,6 +12,7 @@ import {
 import { gitCommands } from './utils-git.js';
 import { VERSION } from './utils.js';
 import { aiCommands, deleteAPIKey } from './utils-ai.js';
+import { update } from './utils-update.js';
 
 function main() {
   // Add command
@@ -58,6 +59,12 @@ function main() {
 
   // Version commands
   program.version(VERSION).description('Caller-CLI Version');
+
+  // Update Caller-CLI
+  program
+    .command('update')
+    .description('Update Caller-CLI')
+    .action(() => update());
 
   // Run command
   program
