@@ -29,8 +29,8 @@
 7. Close your terminal and restart
 8. Use `caller <command>` to run the Caller-CLI command
 
-## update
-To update Caller-CLI, run `update` command:
+## Commands
+Update Caller-CLI:
    ```bash
    caller update
    ```

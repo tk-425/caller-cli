@@ -6,7 +6,7 @@ import {
   printSuccess,
   printTitle,
 } from './utils-print.js';
-import { GIT_COMMAND } from './utils.js';
+import { GIT_COMMAND, NPM_COMMAND } from './utils.js';
 
 export async function update() {
   printTitle('- Update Caller-CLI -');
@@ -26,27 +26,33 @@ export async function update() {
       return;
     }
 
-    const args = [
+    const pullArgs = [
       '-C',
       '/usr/local/share/caller-cli',
       'pull',
       'origin',
       'main',
-      '&&',
-      'npm',
-      'update',
-      '&&',
-      'npm',
-      'update',
     ];
 
-    const process = spawn(GIT_COMMAND, args, { stdio: 'inherit' });
+    const pullProcess = spawn(GIT_COMMAND, pullArgs, { stdio: 'inherit' });
 
-    process.on('close', (code) => {
+    pullProcess.on('close', (code) => {
       printSuccess('Successfully updated.');
     });
 
-    process.on('error', (err) => {
+    pullProcess.on('error', (err) => {
+      printError(err.message);
+    });
+
+    const npmArgs = ['update', '&&', NPM_COMMAND, 'install'];
+
+    const npmProcess = spawn(NPM_COMMAND, npmArgs, { stdio: 'inherit' });
+
+    npmProcess.on('close', (code) => {
+      printSuccess('Successfully updated.');
+    });
+
+    npmProcess.on('error', (err) => {
       printError(err.message);
     });
   } catch (err) {
