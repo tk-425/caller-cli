@@ -57,7 +57,7 @@ export async function update() {
     });
 
     npmUpdateProcess.on('error', (err) => {
-      printError(err.message);
+      printError(`npm update failed: ${err.message}`);
     });
 
     // install new npm packages
@@ -74,7 +74,7 @@ export async function update() {
     });
 
     npmInstallProcess.on('error', (err) => {
-      printError(err.message);
+      printError(`npm install failed: ${err.message}`);
     });
   } catch (err) {
     printForceClosedError(err);
