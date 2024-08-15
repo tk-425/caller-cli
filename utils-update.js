@@ -37,22 +37,34 @@ export async function update() {
     const pullProcess = spawn(GIT_COMMAND, pullArgs, { stdio: 'inherit' });
 
     pullProcess.on('close', (code) => {
-      printSuccess('Successfully updated.');
+      printSuccess('Caller CLI successfully updated.');
     });
 
     pullProcess.on('error', (err) => {
       printError(err.message);
     });
 
-    const npmArgs = ['update', '&&', NPM_COMMAND, 'install'];
+    const npmUpdateArgs = 'update';
 
-    const npmProcess = spawn(NPM_COMMAND, npmArgs, { stdio: 'inherit' });
+    const npmUpdateProcess = spawn(NPM_COMMAND, npmUpdateArgs, { stdio: 'inherit' });
 
-    npmProcess.on('close', (code) => {
-      printSuccess('Successfully updated.');
+    npmUpdateProcess.on('close', (code) => {
+      printSuccess('NPM successfully updated.');
     });
 
-    npmProcess.on('error', (err) => {
+    npmUpdateProcess.on('error', (err) => {
+      printError(err.message);
+    });
+
+    const npmInstallArgs = 'install';
+
+    const npmInstallProcess = spawn(NPM_COMMAND, npmInstallArgs, { stdio: 'inherit' });
+
+    npmInstallProcess.on('close', (code) => {
+      printSuccess('NPM successfully installed.');
+    });
+
+    npmInstallProcess.on('error', (err) => {
       printError(err.message);
     });
   } catch (err) {
