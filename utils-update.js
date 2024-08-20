@@ -6,7 +6,7 @@ import {
   printSuccess,
   printTitle,
 } from './utils-print.js';
-import { GIT_COMMAND, NPM_COMMAND } from './utils.js';
+import { GIT_COMMAND } from './utils.js';
 
 export async function update() {
   printTitle('- Update Caller-CLI -');
