@@ -1,5 +1,6 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import inquirer from 'inquirer';
+
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
   printError,
   printForceClosedError,
@@ -7,10 +8,14 @@ import {
   printTitle,
 } from './utils-print.js';
 import { deleteKey, getKey, saveKey } from './keyManagement.js';
-import { processCommand } from './utils.js';
+import {
+  aiPrompt,
+  GEMINI_MODEL,
+  invalidQuestionMessage,
+  processCommand,
+} from './utils.js';
+import { confirmPrompt, inputPrompt, passwordPrompt } from './utils-prompts.js';
 
-const invalidQuestionMessage =
-  'Please provide a question related to command-line commands.';
 let genAI;
 let model;
 let key;
@@ -23,14 +28,9 @@ export async function aiCommands() {
 
   try {
     if (!password) {
-      const answer = await inquirer.prompt([
-        {
-          type: 'password',
-          name: 'apiKey',
-          message: 'Enter your Gemini API key:',
-          mask: '*',
-        },
-      ]);
+      const answer = await inquirer.prompt(
+        passwordPrompt('apiKey', 'Enter your API key:')
+      );
 
       if (!answer.apiKey) {
         printError('You must provide an API key.');
@@ -44,7 +44,7 @@ export async function aiCommands() {
     }
 
     genAI = new GoogleGenerativeAI(key);
-    model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    model = genAI.getGenerativeModel(GEMINI_MODEL);
 
     askAI();
   } catch (err) {
@@ -57,22 +57,16 @@ async function askAI() {
   let commandString;
 
   try {
-    const answer = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'aiQuestion',
-        message: 'Ask AI:',
-      },
-    ]);
+    const answer = await inquirer.prompt(inputPrompt('aiQuestion', 'Ask AI:'));
 
     if (!answer.aiQuestion) {
       printError('You must provide a question.');
       return;
     }
 
-    const prompt = `Act as a command-line command oracle. Provide only the command as an answer to any question about command-line commands. Do not offer explanations or additional information (no code block). Here is the question "${answer.aiQuestion}?" If the answer is not related to the command-line commands, answer the question with '${invalidQuestionMessage}'`;
-
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(
+      aiPrompt(answer.aiQuestion, invalidQuestionMessage)
+    );
     commandString = result.response.text();
 
     if (commandString.includes(invalidQuestionMessage)) {
@@ -82,17 +76,12 @@ async function askAI() {
 
     console.log('\n', commandString);
 
-    const confirm = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: 'Would you like to run the command?',
-        default: false,
-      },
-    ]);
+    const confirm = await inquirer.prompt(
+      confirmPrompt('Would you like to run the command?')
+    );
 
     if (!confirm.confirmation) {
-      printError('Rename cancelled.');
+      printError('Command execution cancelled.');
       return;
     }
   } catch (err) {
@@ -107,7 +96,7 @@ async function askAI() {
   // return and remove the first element from the args array
   const command = args.shift();
   // Execute the command
-  processCommand(command, args);
+  processCommand(command, args, 'Exiting the Caller CLI. Goodbye!', 'AI Error');
 }
 
 export async function deleteAPIKey() {

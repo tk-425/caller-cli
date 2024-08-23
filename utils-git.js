@@ -8,29 +8,32 @@ import {
   printExit,
   printForceClosedError,
 } from './utils-print.js';
-import { EXIT_OPTION, GIT_COMMAND, processCommand } from './utils.js';
+import {
+  ADD_ALL,
+  COMMIT,
+  CREATE_BRANCH,
+  EXIT_OPTION,
+  GIT_COMMAND,
+  GIT_COMMANDS,
+  LIST_BRANCHES,
+  processCommand,
+} from './utils.js';
+import { confirmPrompt, inputPrompt, listPrompt } from './utils-prompts.js';
 
 const git = simpleGit();
-
-const ADD_ALL = 'Add All';
-const LIST_BRANCHES = 'List Branches';
-const COMMIT = 'Commit';
-const CREATE_BRANCH = 'Create Branch';
-const GIT_COMMANDS = [ADD_ALL, COMMIT, LIST_BRANCHES, CREATE_BRANCH];
 
 export function gitCommands() {
   printTitle('- GIT COMMANDS -');
 
   inquirer
-    .prompt([
-      {
-        type: 'list',
-        name: 'command',
-        message: 'Select a git command',
-        choices: [...GIT_COMMANDS, new inquirer.Separator(), EXIT_OPTION],
-        pageSize: GIT_COMMANDS.length + 2,
-      },
-    ])
+    .prompt(
+      listPrompt(
+        'command',
+        'Select a git command',
+        [...GIT_COMMANDS, new inquirer.Separator(), EXIT_OPTION],
+        GIT_COMMANDS.length + 2
+      )
+    )
     .then((answer) => {
       switch (answer.command) {
         case ADD_ALL:
@@ -56,14 +59,9 @@ export function gitCommands() {
 
 async function gitAddAll() {
   try {
-    const confirmAnswer = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: 'Are you sure you want to add all?',
-        default: false,
-      },
-    ]);
+    const confirmAnswer = await inquirer.prompt(
+      confirmPrompt('Are you sure you want to add all?')
+    );
 
     if (!confirmAnswer.confirmation) {
       printError('Git added cancelled.');
@@ -92,15 +90,14 @@ async function gitListBranches() {
     const branchNames = branches.all;
 
     // Prompt user to select a branch
-    const { branch } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'branch',
-        message: 'Select a branch',
-        choices: [...branchNames, new inquirer.Separator(), EXIT_OPTION],
-        pageSize: branchNames.length + 2,
-      },
-    ]);
+    const { branch } = await inquirer.prompt(
+      listPrompt(
+        'branch',
+        'Select a branch',
+        [...branchNames, new inquirer.Separator(), EXIT_OPTION],
+        branchNames.length + 2
+      )
+    );
 
     if (branch === EXIT_OPTION) {
       printExit();
@@ -118,27 +115,20 @@ async function gitListBranches() {
 
 async function gitCommit() {
   try {
-    const answer = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'commitMessage',
-        message: 'Commit Message:',
-      },
-    ]);
+    const answer = await inquirer.prompt(
+      inputPrompt('commitMessage', 'Commit Message:')
+    );
 
     if (!answer.commitMessage) {
       printError('You must provide a commit message.');
       return;
     }
 
-    const confirmAnswer = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: `Are you sure you want to commit with\n"${answer.commitMessage}"?`,
-        default: false,
-      },
-    ]);
+    const confirmAnswer = await inquirer.prompt(
+      confirmPrompt(
+        `Are you sure you want to commit with\n"${answer.commitMessage}"?`
+      )
+    );
 
     if (!confirmAnswer.confirmation) {
       printError('Git commit cancelled.');
@@ -162,27 +152,20 @@ async function gitCommit() {
 
 async function gitCreateBranch() {
   try {
-    const answer = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'createBranch',
-        message: 'Create a new branch:',
-      },
-    ]);
+    const answer = await inquirer.prompt(
+      inputPrompt('createBranch', 'Create a new branch name:')
+    );
 
     if (!answer.createBranch) {
       printError('You must provide a branch name.');
       return;
     }
 
-    const confirmAnswer = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: `Are you sure you want to create a branch named "${answer.createBranch}"?`,
-        default: false,
-      },
-    ]);
+    const confirmAnswer = await inquirer.prompt(
+      confirmPrompt(
+        `Are you sure you want to create a branch named "${answer.createBranch}"?`
+      )
+    );
 
     if (!confirmAnswer.confirmation) {
       printError('Git branch creation cancelled.');
