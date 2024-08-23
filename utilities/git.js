@@ -7,18 +7,21 @@ import {
   printTitle,
   printExit,
   printForceClosedError,
-} from './utils-print.js';
+} from './print.js';
+import { confirmPrompt, inputPrompt, listPrompt } from './prompts.js';
+import { processCommand } from './process.js';
 import {
   ADD_ALL,
   COMMIT,
   CREATE_BRANCH,
   EXIT_OPTION,
+  GIT_ADD_ARGS,
+  GIT_CHECKOUT_ARGS,
   GIT_COMMAND,
   GIT_COMMANDS,
+  GIT_COMMIT_ARGS,
   LIST_BRANCHES,
-  processCommand,
-} from './utils.js';
-import { confirmPrompt, inputPrompt, listPrompt } from './utils-prompts.js';
+} from '../config.js';
 
 const git = simpleGit();
 
@@ -73,13 +76,12 @@ async function gitAddAll() {
 
     processCommand(
       GIT_COMMAND,
-      ['add', '.'],
+      GIT_ADD_ARGS,
       'Changes have been successfully staged for the next commit.',
       'Failed to stage changes.'
     );
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }
 
@@ -109,7 +111,6 @@ async function gitListBranches() {
     printSuccess(`Switched to branch: ${branch}\n`);
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }
 
@@ -140,13 +141,12 @@ async function gitCommit() {
 
     processCommand(
       GIT_COMMAND,
-      ['commit', '-m', answer.commitMessage],
+      [...GIT_COMMIT_ARGS, answer.commitMessage],
       'Commit completed.',
       'Commit failed.'
     );
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }
 
@@ -177,12 +177,11 @@ async function gitCreateBranch() {
 
     processCommand(
       GIT_COMMAND,
-      ['checkout', '-b', answer.createBranch],
+      [...GIT_CHECKOUT_ARGS, answer.createBranch],
       'Branch created and now active.',
       'Branch creation and checkout failed.'
     );
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }

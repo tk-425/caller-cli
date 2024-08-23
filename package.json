@@ -1,6 +1,6 @@
 {
   "name": "@kt425/caller-cli",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "main": "caller.js",
   "type": "module",
   "bin": {
