@@ -1,6 +1,3 @@
-// import path from 'path';
-// import { fileURLToPath } from 'url';
-import { spawn } from 'child_process';
 import jsonfile from 'jsonfile';
 import inquirer from 'inquirer';
 
@@ -12,20 +9,15 @@ import {
   printRunningCommand,
   printForceClosedError,
 } from './utils-print.js';
-import { EXIT_OPTION } from './utils.js';
+import { EXIT_OPTION, processCommand } from './utils.js';
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 const COMMAND_FILE = '/usr/local/share/caller-cli/caller-cli-commands.json';
-// const BRANCH_FILE = '/usr/local/etc/caller-cli-current-branch.json';
 
 // Load commands
 export function loadCommands() {
   try {
     return jsonfile.readFileSync(COMMAND_FILE);
   } catch (err) {
-    // // If there is no command file then create a new one
-    // jsonfile.writeFileSync(COMMAND_FILE, {}, { spaces: 4 });
     return {};
   }
 }
@@ -184,16 +176,12 @@ export function runCommand(name) {
 
     printRunningCommand(`${command}`);
 
-    // Show the running process of the command
-    const process = spawn(cmd, args, { stdio: 'inherit' });
-
-    process.on('close', (code) => {
-      printSuccess(`Command '${name}' exited with code ${code}`);
-    });
-
-    process.on('error', (err) => {
-      printError(`Error executing command '${name}: ${err.message}'`);
-    });
+    processCommand(
+      cmd,
+      args,
+      'Command executed successfully.',
+      'Command failed to execute.'
+    );
   } else if (name === EXIT_OPTION) {
     printExit();
   } else {

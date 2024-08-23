@@ -6,7 +6,7 @@ import {
   printSuccess,
   printTitle,
 } from './utils-print.js';
-import { GIT_COMMAND } from './utils.js';
+import { GIT_COMMAND, processCommand } from './utils.js';
 
 export async function update() {
   printTitle('- Update Caller-CLI -');
@@ -44,6 +44,8 @@ export async function update() {
     pullProcess.on('error', (err) => {
       printError(`Update failed: ${err.message}`);
     });
+
+    processCommand(GIT_COMMAND, pullArgs);
 
     // Update npm package
     const npmUpdateProcess = spawn(

@@ -1,4 +1,3 @@
-import { spawn } from 'child_process';
 import simpleGit from 'simple-git';
 import inquirer from 'inquirer';
 
@@ -9,7 +8,7 @@ import {
   printExit,
   printForceClosedError,
 } from './utils-print.js';
-import { EXIT_OPTION, GIT_COMMAND } from './utils.js';
+import { EXIT_OPTION, GIT_COMMAND, processCommand } from './utils.js';
 
 const git = simpleGit();
 
@@ -18,20 +17,6 @@ const LIST_BRANCHES = 'List Branches';
 const COMMIT = 'Commit';
 const CREATE_BRANCH = 'Create Branch';
 const GIT_COMMANDS = [ADD_ALL, COMMIT, LIST_BRANCHES, CREATE_BRANCH];
-
-function processCommand(cmd, args) {
-  const process = spawn(cmd, args, {
-    stdio: 'inherit',
-  });
-
-  process.on('close', (code) => {
-    printSuccess(`Process exited with code ${code}`);
-  });
-
-  process.on('error', (err) => {
-    printError(err.message);
-  });
-}
 
 export function gitCommands() {
   printTitle('- GIT COMMANDS -');
@@ -88,19 +73,12 @@ async function gitAddAll() {
     // Extra line spaces
     console.log();
 
-    // const process = spawn(GIT_COMMAND, ['add', '-A'], {
-    //   stdio: 'inherit',
-    // });
-
-    // process.on('close', (code) => {
-    //   printSuccess(`Process exited with code ${code}`);
-    // });
-
-    // process.on('error', (err) => {
-    //   printError(err.message);
-    // });
-
-    processCommand(GIT_COMMAND, ['add', '-A']);
+    processCommand(
+      GIT_COMMAND,
+      ['add', '.'],
+      'Changes have been successfully staged for the next commit.',
+      'Failed to stage changes.'
+    );
   } catch (err) {
     printForceClosedError(err);
     return;
@@ -170,17 +148,12 @@ async function gitCommit() {
     // Extra line spaces
     console.log();
 
-    const process = spawn(GIT_COMMAND, ['commit', '-m', answer.commitMessage], {
-      stdio: 'inherit',
-    });
-
-    process.on('close', (code) => {
-      printSuccess(`Process exited with code ${code}`);
-    });
-
-    process.on('error', (err) => {
-      printError(`${err.message}'`);
-    });
+    processCommand(
+      GIT_COMMAND,
+      ['commit', '-m', answer.commitMessage],
+      'Commit completed.',
+      'Commit failed.'
+    );
   } catch (err) {
     printForceClosedError(err);
     return;
@@ -219,22 +192,12 @@ async function gitCreateBranch() {
     // Extra line spaces
     console.log();
 
-    // Execute the command
-    const process = spawn(
+    processCommand(
       GIT_COMMAND,
       ['checkout', '-b', answer.createBranch],
-      {
-        stdio: 'inherit',
-      }
+      'Branch created and now active.',
+      'Branch creation and checkout failed.'
     );
-
-    process.on('close', (code) => {
-      printSuccess(`Process exited with code ${code}`);
-    });
-
-    process.on('error', (err) => {
-      printError(`${err.message}'`);
-    });
   } catch (err) {
     printForceClosedError(err);
     return;
