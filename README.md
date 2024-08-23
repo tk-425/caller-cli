@@ -1,6 +1,6 @@
 # Caller CLI
 
-Caller-CLI is a powerful command-line tool designed to simplify and streamline your workflow. Inspired by [fig.io](https://fig.io/), Caller-CLI offers shortcuts for complex and hard-to-remember commands, integrates Git features, and leverages GPT-like AI to help you quickly find and execute the commands you need. Whether you're looking to create custom shortcuts or need assistance with command-line tasks, Caller-CLI makes your terminal experience more efficient and intuitive.
+Caller-CLI is a handy command-line tool that makes your life easier by simplifying your workflow. It's inspired by [fig.io](https://fig.io/), which has shut down, and it offers shortcuts for those tricky commands you can never remember. Plus, it has some Git features and uses AI to help you find and run commands quickly. If you want to create your own shortcuts or just need a bit of help with command-line tasks, Caller-CLI is here to make things smoother and more straightforward.
 
 ## Installation
 
@@ -150,7 +150,6 @@ npm list -g
 Please only ask questions about command-line commands. Otherwise, the AI will respond with `Please provide a question related to command-line commands`.
 
 > Note: Your API key is securely stored using the [keytar](https://www.npmjs.com/package/keytar) npm package and saved in your system's keychain.
-
 
 ### Delete API Key
 
