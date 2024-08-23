@@ -8,11 +8,10 @@ import {
   printExit,
   printRunningCommand,
   printForceClosedError,
-} from './utils-print.js';
-import { EXIT_OPTION, processCommand } from './utils.js';
-import { confirmPrompt, listPrompt } from './utils-prompts.js';
-
-const COMMAND_FILE = '/usr/local/share/caller-cli/caller-cli-commands.json';
+} from './print.js';
+import { confirmPrompt, listPrompt } from './prompts.js';
+import { processCommand } from './process.js';
+import { COMMAND_FILE, EXIT_OPTION } from '../config.js';
 
 // Load commands
 export function loadCommands() {
@@ -49,7 +48,6 @@ export async function addCommand(name, cmd) {
     printSuccess(`Command '${name}' added.`);
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }
 
@@ -111,7 +109,6 @@ export async function removeCommands(name) {
     printSuccess(`Command '${name}' removed.`);
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }
 
@@ -147,7 +144,6 @@ export async function renamedCommands(oldName, newName) {
     printSuccess(`Command '${oldName}' renamed to '${newName}'`);
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }
 

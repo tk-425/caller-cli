@@ -6,15 +6,11 @@ import {
   printForceClosedError,
   printSuccess,
   printTitle,
-} from './utils-print.js';
+} from './print.js';
 import { deleteKey, getKey, saveKey } from './keyManagement.js';
-import {
-  aiPrompt,
-  GEMINI_MODEL,
-  invalidQuestionMessage,
-  processCommand,
-} from './utils.js';
-import { confirmPrompt, inputPrompt, passwordPrompt } from './utils-prompts.js';
+import { confirmPrompt, inputPrompt, passwordPrompt } from './prompts.js';
+import { processCommand } from './process.js';
+import { aiPrompt, GEMINI_MODEL, invalidQuestionMessage } from '../config.js';
 
 let genAI;
 let model;
@@ -49,7 +45,6 @@ export async function aiCommands() {
     askAI();
   } catch (err) {
     printForceClosedError(err);
-    return;
   }
 }
 
