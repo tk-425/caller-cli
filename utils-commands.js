@@ -10,6 +10,7 @@ import {
   printForceClosedError,
 } from './utils-print.js';
 import { EXIT_OPTION, processCommand } from './utils.js';
+import { confirmPrompt, listPrompt } from './utils-prompts.js';
 
 const COMMAND_FILE = '/usr/local/share/caller-cli/caller-cli-commands.json';
 
@@ -35,14 +36,9 @@ export async function addCommand(name, cmd) {
   printTitle('- Add -');
 
   try {
-    const confirmAnswer = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: `Are you sure you want to add "${name}"?`,
-        default: false,
-      },
-    ]);
+    const confirmAnswer = await inquirer.prompt(
+      confirmPrompt(`Are you sure you want to add "${name}"?`)
+    );
 
     if (!confirmAnswer.confirmation) {
       printError('Command added cancelled.');
@@ -73,15 +69,14 @@ export function listCommands() {
 
   // Selection
   inquirer
-    .prompt([
-      {
-        type: 'list',
-        name: 'cmd',
-        message: 'Select command',
-        choices: [...sortedCommandNames, new inquirer.Separator(), EXIT_OPTION],
-        pageSize: sortedCommandNames.length + 2, // Adjust to the number of choices + 2 for the separator and the exit command
-      },
-    ])
+    .prompt(
+      listPrompt(
+        'cmd',
+        'Select command',
+        [...sortedCommandNames, new inquirer.Separator(), EXIT_OPTION],
+        sortedCommandNames.length + 2
+      )
+    )
     .then((answers) => {
       runCommand(answers.cmd);
     })
@@ -102,14 +97,9 @@ export async function removeCommands(name) {
   printTitle('- Remove -');
 
   try {
-    const answer = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: 'Are you sure you want to remove?',
-        default: false,
-      },
-    ]);
+    const answer = await inquirer.prompt(
+      confirmPrompt('Are you sure you want to remove?')
+    );
 
     if (!answer.confirmation) {
       printError('Rename cancelled.');
@@ -142,14 +132,9 @@ export async function renamedCommands(oldName, newName) {
   printTitle('- Rename -');
 
   try {
-    const answer = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: 'Are you sure you want to rename?',
-        default: false,
-      },
-    ]);
+    const answer = await inquirer.prompt(
+      confirmPrompt('Are you sure you want to rename?')
+    );
 
     if (!answer.confirmation) {
       printError('Rename cancelled.');
