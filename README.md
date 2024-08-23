@@ -1,5 +1,7 @@
 # Caller CLI
 
+Caller-CLI is a powerful command-line tool designed to simplify and streamline your workflow. Inspired by [fig.io](https://fig.io/), Caller-CLI offers shortcuts for complex and hard-to-remember commands, integrates Git features, and leverages GPT-like AI to help you quickly find and execute the commands you need. Whether you're looking to create custom shortcuts or need assistance with command-line tasks, Caller-CLI makes your terminal experience more efficient and intuitive.
+
 ## Installation
 
 1. To install Caller CLI, follow these steps:
