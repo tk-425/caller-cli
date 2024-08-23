@@ -19,6 +19,20 @@ const COMMIT = 'Commit';
 const CREATE_BRANCH = 'Create Branch';
 const GIT_COMMANDS = [ADD_ALL, COMMIT, LIST_BRANCHES, CREATE_BRANCH];
 
+function processCommand(cmd, args) {
+  const process = spawn(cmd, args, {
+    stdio: 'inherit',
+  });
+
+  process.on('close', (code) => {
+    printSuccess(`Process exited with code ${code}`);
+  });
+
+  process.on('error', (err) => {
+    printError(err.message);
+  });
+}
+
 export function gitCommands() {
   printTitle('- GIT COMMANDS -');
 
@@ -74,17 +88,19 @@ async function gitAddAll() {
     // Extra line spaces
     console.log();
 
-    const process = spawn(GIT_COMMAND, ['add', '-A'], {
-      stdio: 'inherit',
-    });
+    // const process = spawn(GIT_COMMAND, ['add', '-A'], {
+    //   stdio: 'inherit',
+    // });
 
-    process.on('close', (code) => {
-      printSuccess(`Process exited with code ${code}`);
-    });
+    // process.on('close', (code) => {
+    //   printSuccess(`Process exited with code ${code}`);
+    // });
 
-    process.on('error', (err) => {
-      printError(err.message);
-    });
+    // process.on('error', (err) => {
+    //   printError(err.message);
+    // });
+
+    processCommand(GIT_COMMAND, ['add', '-A']);
   } catch (err) {
     printForceClosedError(err);
     return;
@@ -204,9 +220,13 @@ async function gitCreateBranch() {
     console.log();
 
     // Execute the command
-    const process = spawn(GIT_COMMAND, ['checkout', '-b', answer.createBranch], {
-      stdio: 'inherit',
-    });
+    const process = spawn(
+      GIT_COMMAND,
+      ['checkout', '-b', answer.createBranch],
+      {
+        stdio: 'inherit',
+      }
+    );
 
     process.on('close', (code) => {
       printSuccess(`Process exited with code ${code}`);
