@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import inquirer from 'inquirer';
-import { spawn } from 'child_process';
 import {
   printError,
   printForceClosedError,
@@ -8,6 +7,7 @@ import {
   printTitle,
 } from './utils-print.js';
 import { deleteKey, getKey, saveKey } from './keyManagement.js';
+import { processCommand } from './utils.js';
 
 const invalidQuestionMessage =
   'Please provide a question related to command-line commands.';
@@ -107,17 +107,7 @@ async function askAI() {
   // return and remove the first element from the args array
   const command = args.shift();
   // Execute the command
-  const process = spawn(command, args, {
-    stdio: 'inherit',
-  });
-
-  process.on('close', (code) => {
-    printSuccess(`Process exited with code ${code}`);
-  });
-
-  process.on('error', (err) => {
-    printError(err.message);
-  });
+  processCommand(command, args);
 }
 
 export async function deleteAPIKey() {
