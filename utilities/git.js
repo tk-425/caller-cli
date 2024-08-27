@@ -7,12 +7,13 @@ import {
   printTitle,
   printExit,
   printForceClosedError,
+  printMessage,
 } from './print.js';
 import { processCommand } from './process.js';
 import {
-  GIT_ADD_ALL,
-  GIT_COMMIT,
-  GIT_CREATE_BRANCH,
+  GIT_OPTION_ADD_ALL,
+  GIT_OPTION_COMMIT,
+  GIT_OPTION_CREATE_BRANCH,
   EXIT_OPTION,
   GIT_ADD_ARGS,
   GIT_ADD_CANCELLED_MESSAGE,
@@ -27,7 +28,7 @@ import {
   GIT_COMMIT_ARGS,
   GIT_LIST_PROMPT_MESSAGE,
   GIT_LIST_PROMPT_NAME,
-  GIT_LIST_BRANCHES,
+  GIT_OPTION_LIST_BRANCHES,
   GIT_LIST_BRANCH_PROMPT_NAME,
   GIT_LIST_BRANCH_PROMPT_MESSAGE,
   GIT_COMMIT_PROMPT_NAME,
@@ -41,18 +42,35 @@ import {
   GIT_CREATE_BRANCH_EMPTY_INPUT_ERROR_MESSAGE,
   GIT_CREATE_BRANCH_CANCELLED_MESSAGE,
   GIT_TITLE,
+  GIT_GET_CURRENT_BRANCH_ERROR_MESSAGE,
+  GIT_OPTION_PUSH_TO_CURRENT_BRANCH,
+  GIT_PUSH_BRANCH_CANCELLED_MESSAGE,
+  GIT_ORIGIN_ARG,
+  GIT_PUSH_BRANCH_SUCCESS_MESSAGE,
+  GIT_PUSH_BRANCH_FAILED_MESSAGE,
 } from '../config.js';
 import {
   branchSwitchedMessage,
   commitConfirmationMessage,
   confirmPrompt,
   createBranchConfirmationMessage,
+  currentBranchMessage,
   inputPrompt,
   listPrompt,
   listPromptChoices,
+  pushBranchConfirmationMessage,
 } from './util.js';
 
 const git = simpleGit();
+const getCurrentBranch = async () => {
+  try {
+    const { current } = await git.branchLocal();
+    return current;
+  } catch (err) {
+    printError(GIT_GET_CURRENT_BRANCH_ERROR_MESSAGE);
+    throw err;
+  }
+};
 
 export function gitCommands() {
   printTitle(GIT_TITLE);
@@ -68,17 +86,20 @@ export function gitCommands() {
     )
     .then((answer) => {
       switch (answer.command) {
-        case GIT_ADD_ALL:
+        case GIT_OPTION_ADD_ALL:
           gitAddAll();
           return;
-        case GIT_LIST_BRANCHES:
+        case GIT_OPTION_LIST_BRANCHES:
           gitListBranches();
           return;
-        case GIT_COMMIT:
+        case GIT_OPTION_COMMIT:
           gitCommit();
           return;
-        case GIT_CREATE_BRANCH:
+        case GIT_OPTION_CREATE_BRANCH:
           gitCreateBranch();
+          return;
+        case GIT_OPTION_PUSH_TO_CURRENT_BRANCH:
+          pushToCurrentBranch();
           return;
         case EXIT_OPTION:
           printExit();
@@ -208,5 +229,28 @@ async function gitCreateBranch() {
     );
   } catch (err) {
     printForceClosedError(err);
+  }
+}
+
+async function pushToCurrentBranch() {
+  try {
+    const currentBranch = await getCurrentBranch();
+
+    printMessage(currentBranchMessage(currentBranch));
+
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(pushBranchConfirmationMessage(currentBranch))
+    );
+
+    if (!confirmation) {
+      printError(GIT_PUSH_BRANCH_CANCELLED_MESSAGE);
+      return;
+    }
+
+    await git.push(GIT_ORIGIN_ARG, currentBranch);
+    printSuccess(GIT_PUSH_BRANCH_SUCCESS_MESSAGE);
+  } catch (err) {
+    printError(GIT_PUSH_BRANCH_FAILED_MESSAGE);
+    printError(err.message);
   }
 }
