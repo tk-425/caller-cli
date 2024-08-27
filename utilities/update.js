@@ -33,6 +33,8 @@ export async function update() {
       return;
     }
 
+    console.log();
+
     // Execute the Git command to pull updates
     processCommand(
       GIT_COMMAND,
