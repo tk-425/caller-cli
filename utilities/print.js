@@ -51,5 +51,5 @@ export function redBrightText(text) {
 }
 
 export function printMessage(text) {
-  console.log(greenBrightText(text));
+  console.log('\n', greenBrightText(text));
 }

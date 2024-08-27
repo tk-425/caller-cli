@@ -4,6 +4,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
   printError,
   printForceClosedError,
+  printMessage,
   printSuccess,
   printTitle,
 } from './print.js';
@@ -89,7 +90,8 @@ async function askAI() {
       return;
     }
 
-    console.log('\n', commandString);
+    // console.log('\n', commandString);
+    printMessage(commandString);
 
     const { confirmation } = await inquirer.prompt(
       confirmPrompt(AI_ASK_CONFIRM_MESSAGE)
