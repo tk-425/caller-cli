@@ -28,12 +28,12 @@ export async function update() {
       confirmPrompt(UPDATE_PROMPT_MESSAGE)
     );
 
+    console.log();
+
     if (!confirmation) {
       printError(UPDATE_CANCELLED_MESSAGE);
       return;
     }
-
-    console.log();
 
     // Execute the Git command to pull updates
     processCommand(
