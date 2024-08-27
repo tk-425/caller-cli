@@ -47,7 +47,6 @@ import {
   GIT_PUSH_BRANCH_CANCELLED_MESSAGE,
   GIT_ORIGIN_ARG,
   GIT_PUSH_BRANCH_SUCCESS_MESSAGE,
-  GIT_PUSH_BRANCH_FAILED_MESSAGE,
 } from '../config.js';
 import {
   branchSwitchedMessage,
@@ -250,7 +249,6 @@ async function pushToCurrentBranch() {
     await git.push(GIT_ORIGIN_ARG, currentBranch);
     printSuccess(GIT_PUSH_BRANCH_SUCCESS_MESSAGE);
   } catch (err) {
-    printError(GIT_PUSH_BRANCH_FAILED_MESSAGE);
-    printError(err.message);
+    printForceClosedError(err);
   }
 }

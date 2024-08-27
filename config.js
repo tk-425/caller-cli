@@ -77,7 +77,6 @@ export const GIT_GET_CURRENT_BRANCH_ERROR_MESSAGE =
   'Failed to get current branch.';
 export const GIT_PUSH_BRANCH_CANCELLED_MESSAGE = 'Push branch cancelled.';
 export const GIT_PUSH_BRANCH_SUCCESS_MESSAGE = 'Push branch succeeded.';
-export const GIT_PUSH_BRANCH_FAILED_MESSAGE = 'Push branch failed.';
 
 // AI
 export const AI_KEY_ACCOUNT_GEMINI = 'gemini';
