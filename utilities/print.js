@@ -7,11 +7,11 @@ import {
 } from '../config.js';
 
 export function printSuccess(msg) {
-  console.log(`\n${chalk.blueBright(msg)}`);
+  console.log(`\n${blueBrightText(msg)}`);
 }
 
 export function printError(err) {
-  console.log(`\n${chalk.redBright(err)}`);
+  console.log(`\n${redBrightText(err)}`);
 }
 
 export function printForceClosedError(err) {
@@ -40,4 +40,16 @@ export function printExit() {
 
 export function blueBrightText(text) {
   return chalk.blueBright(text);
+}
+
+export function greenBrightText(text) {
+  return chalk.greenBright(text);
+}
+
+export function redBrightText(text) {
+  return chalk.redBright(text);
+}
+
+export function printMessage(text) {
+  console.log(greenBrightText(text));
 }

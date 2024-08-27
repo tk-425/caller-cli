@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { EXIT_OPTION, AI_INVALID_QUESTION_MESSAGE } from '../config.js';
-import { blueBrightText } from './print.js';
+import { redBrightText, greenBrightText } from './print.js';
 
 // LIST
 export const listPrompt = (name, message, choices, pageSize) => [
@@ -47,30 +47,38 @@ export const listPromptChoices = (options) => {
   return [...options, new inquirer.Separator(), EXIT_OPTION];
 };
 export const addCommandConfirmationMessage = (name) => {
-  return `Are you sure you want to add "${name}"?`;
+  return `Are you sure you want to add "${greenBrightText(name)}"?`;
 };
 export const addCommandSuccessMessage = (name) => {
-  return `Command '${name}' added.`;
+  return `Command '${greenBrightText(name)}' added.`;
 };
 export const noCommandMessage = (name) => {
-  return `No command found with the name '${name}'`;
+  return `No command found with the name '${greenBrightText(name)}'`;
 };
 export const commandRemovedMessage = (name) => {
-  return `Command '${name}' removed.`;
+  return `Command '${greenBrightText(name)}' removed.`;
 };
 export const renameCommandSuccessMessage = (oldName, newName) => {
-  return `Command '${oldName}' renamed to '${newName}'`;
+  return `Command '${redBrightText(oldName)}' renamed to '${greenBrightText(newName)}'`;
 };
 
 // GIT
 export const branchSwitchedMessage = (branch) => {
-  return `Switched to branch: ${branch}\n`;
+  return `Switched to branch: ${greenBrightText(branch)}\n`;
 };
 export const commitConfirmationMessage = (message) => {
-  return `Are you sure you want to commit with "${blueBrightText(message)}"?`;
+  return `Are you sure you want to commit with "${greenBrightText(message)}"?`;
 };
-export const createBranchConfirmationMessage = (message) => {
-  return `Are you sure you want to create a branch named "${message}"?`;
+export const createBranchConfirmationMessage = (branch) => {
+  return `Are you sure you want to create a branch named "${greenBrightText(
+    branch
+  )}"?`;
+};
+export const currentBranchMessage = (branch) => {
+  return `\nCurrent branch: ${greenBrightText(branch)}\n`;
+};
+export const pushBranchConfirmationMessage = (branch) => {
+  return `Do you want to push the branch ${greenBrightText(branch)}?`;
 };
 
 // AI

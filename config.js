@@ -1,5 +1,5 @@
 // Caller-CLI
-export const VERSION = 'v1.2.5';
+export const VERSION = 'v1.2.6';
 export const EXIT_OPTION = 'EXIT';
 export const COMMAND_FILE_LOCATION =
   '/usr/local/share/caller-cli/caller-cli-commands.json';
@@ -29,19 +29,24 @@ export const COMMANDS_EXECUTE_FAILURE_MESSAGE = 'Command failed to execute.';
 // GIT
 export const GIT_TITLE = '- GIT COMMANDS -';
 export const GIT_COMMAND = 'git';
-export const GIT_ADD_ALL = 'Add All';
-export const GIT_LIST_BRANCHES = 'List Branches';
-export const GIT_COMMIT = 'Commit';
-export const GIT_CREATE_BRANCH = 'Create Branch';
+export const GIT_ORIGIN_ARG = 'origin';
+export const GIT_OPTION_ADD_ALL = 'Add All';
+export const GIT_OPTION_COMMIT = 'Commit';
+export const GIT_OPTION_LIST_BRANCHES = 'List Branches';
+export const GIT_OPTION_CREATE_BRANCH = 'Create Branch';
+export const GIT_OPTION_PUSH_TO_CURRENT_BRANCH = 'Push to current branch';
 export const GIT_COMMANDS = [
-  GIT_ADD_ALL,
-  GIT_COMMIT,
-  GIT_LIST_BRANCHES,
-  GIT_CREATE_BRANCH,
+  GIT_OPTION_ADD_ALL,
+  GIT_OPTION_COMMIT,
+  GIT_OPTION_LIST_BRANCHES,
+  GIT_OPTION_CREATE_BRANCH,
+  GIT_OPTION_PUSH_TO_CURRENT_BRANCH,
 ];
 export const GIT_ADD_ARGS = ['add', '.'];
 export const GIT_COMMIT_ARGS = ['commit', '-m'];
 export const GIT_CHECKOUT_ARGS = ['checkout', '-b'];
+export const GIT_PUSH_CURRENT_BRANCH_ARGS = [];
+
 export const GIT_LIST_PROMPT_NAME = 'command';
 export const GIT_LIST_PROMPT_MESSAGE = 'Select a git command';
 export const GIT_ADD_CONFIRM_MESSAGE = 'Are you sure you want to add all?';
@@ -68,6 +73,10 @@ export const GIT_CREATE_BRANCH_SUCCESS_MESSAGE =
   'Branch created and now active.';
 export const GIT_CREATE_BRANCH_FAILED_MESSAGE =
   'Branch creation and checkout failed.';
+export const GIT_GET_CURRENT_BRANCH_ERROR_MESSAGE =
+  'Failed to get current branch.';
+export const GIT_PUSH_BRANCH_CANCELLED_MESSAGE = 'Push branch cancelled.';
+export const GIT_PUSH_BRANCH_SUCCESS_MESSAGE = 'Push branch succeeded.';
 
 // AI
 export const AI_KEY_ACCOUNT_GEMINI = 'gemini';
