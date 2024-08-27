@@ -1,21 +1,21 @@
 import { spawn } from 'child_process';
 import { printError, printSuccess } from './print.js';
+import { processNonZeroCodeMessage } from './util.js';
+import { STDIO_INHERIT } from '../config.js';
 
 // Processes the command line
 export function processCommand(cmd, args, successMessage, errorMessage) {
-  const process = spawn(cmd, args, {
-    stdio: 'inherit',
-  });
+  const process = spawn(cmd, args, STDIO_INHERIT);
 
   process.on('exit', (code) => {
     if (code === 0) {
       printSuccess(successMessage);
     } else {
-      printError(`Process exited with code ${code}`);
+      printError(processNonZeroCodeMessage(code));
     }
   });
 
   process.on('error', (err) => {
-    printError(`${errorMessage}\n${err.message}`);
+    printError(processErrorMessage(errorMessage ,err.message));
   });
 }

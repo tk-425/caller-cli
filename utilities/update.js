@@ -1,51 +1,60 @@
 import inquirer from 'inquirer';
 
 import { printError, printForceClosedError, printTitle } from './print.js';
-import { confirmPrompt } from './prompts.js';
 import { processCommand } from './process.js';
 import {
   GIT_COMMAND,
-  NPM_INSTALL_ARGS,
-  NPM_UPDATE_ARGS,
-  PULL_ARGS,
-  SH_COMMAND,
+  UPDATE_NPM_INSTALL_ARGS,
+  UPDATE_NPM_UPDATE_ARGS,
+  UPDATE_PULL_ARGS,
+  UPDATE_SH_COMMAND,
+  UPDATE_CANCELLED_MESSAGE,
+  UPDATE_CALLER_CLI_FAILED_MESSAGE,
+  UPDATE_CALLER_CLI_SUCCESS_MESSAGE,
+  UPDATE_PROMPT_MESSAGE,
+  UPDATE_TITLE,
+  UPDATE_NPM_UPDATE_SUCCESS_MESSAGE,
+  UPDATE_NPM_UPDATE_FAILED_MESSAGE,
+  UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE,
+  UPDATE_NPM_INSTALLED_FAILED_MESSAGE,
 } from '../config.js';
+import { confirmPrompt } from './util.js';
 
 export async function update() {
-  printTitle('- Update Caller-CLI -');
+  printTitle(UPDATE_TITLE);
 
   try {
-    const confirmAnswer = await inquirer.prompt(
-      confirmPrompt('Are you sure you want to update Caller-CLI?')
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(UPDATE_PROMPT_MESSAGE)
     );
 
-    if (!confirmAnswer.confirmation) {
-      printError('Update cancelled.');
+    if (!confirmation) {
+      printError(UPDATE_CANCELLED_MESSAGE);
       return;
     }
 
     // Execute the Git command to pull updates
     processCommand(
       GIT_COMMAND,
-      PULL_ARGS,
-      'Caller CLI successfully updated.',
-      'Update failed.'
+      UPDATE_PULL_ARGS,
+      UPDATE_CALLER_CLI_SUCCESS_MESSAGE,
+      UPDATE_CALLER_CLI_FAILED_MESSAGE
     );
 
     // Update NPM packages
     processCommand(
-      SH_COMMAND,
-      NPM_UPDATE_ARGS,
-      'NPM successfully updated.',
-      'NPM update failed.'
+      UPDATE_SH_COMMAND,
+      UPDATE_NPM_UPDATE_ARGS,
+      UPDATE_NPM_UPDATE_SUCCESS_MESSAGE,
+      UPDATE_NPM_UPDATE_FAILED_MESSAGE
     );
 
     // Install NPM packages
     processCommand(
-      SH_COMMAND,
-      NPM_INSTALL_ARGS,
-      'NPM successfully installed.',
-      'NPM installation failed.'
+      UPDATE_SH_COMMAND,
+      UPDATE_NPM_INSTALL_ARGS,
+      UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE,
+      UPDATE_NPM_INSTALLED_FAILED_MESSAGE
     );
   } catch (err) {
     printForceClosedError(err);
