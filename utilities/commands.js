@@ -33,11 +33,11 @@ import {
   listPrompt,
   confirmPrompt,
   listPromptChoices,
-  addConfirmationMessage,
-  addSuccessMessage,
+  addCommandConfirmationMessage,
+  addCommandSuccessMessage,
   noCommandMessage,
   commandRemovedMessage,
-  renameSuccessMessage,
+  renameCommandSuccessMessage,
 } from './util.js';
 
 // Load commands
@@ -65,7 +65,7 @@ export async function addCommand(name, cmd) {
 
   try {
     const { confirmation } = await inquirer.prompt(
-      confirmPrompt(addConfirmationMessage(name))
+      confirmPrompt(addCommandConfirmationMessage(name))
     );
 
     if (!confirmation) {
@@ -74,7 +74,7 @@ export async function addCommand(name, cmd) {
     }
 
     saveCommands(commands);
-    printSuccess(addSuccessMessage(name));
+    printSuccess(addCommandSuccessMessage(name));
   } catch (err) {
     printForceClosedError(err);
   }
@@ -170,7 +170,7 @@ export async function renamedCommands(oldName, newName) {
     commands[newName] = commands[oldName];
     delete commands[oldName];
     saveCommands(commands);
-    printSuccess(renameSuccessMessage(oldName, newName));
+    printSuccess(renameCommandSuccessMessage(oldName, newName));
   } catch (err) {
     printForceClosedError(err);
   }
