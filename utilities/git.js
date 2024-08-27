@@ -8,47 +8,76 @@ import {
   printExit,
   printForceClosedError,
 } from './print.js';
-import { confirmPrompt, inputPrompt, listPrompt } from './prompts.js';
 import { processCommand } from './process.js';
 import {
-  ADD_ALL,
-  COMMIT,
-  CREATE_BRANCH,
+  GIT_ADD_ALL,
+  GIT_COMMIT,
+  GIT_CREATE_BRANCH,
   EXIT_OPTION,
   GIT_ADD_ARGS,
+  GIT_ADD_CANCELLED_MESSAGE,
+  GIT_ADD_FAILED_MESSAGE,
+  GIT_ADD_CONFIRM_MESSAGE,
+  GIT_ADD_SUCCESS_MESSAGE,
+  GIT_CREATE_BRANCH_FAILED_MESSAGE,
+  GIT_CREATE_BRANCH_SUCCESS_MESSAGE,
   GIT_CHECKOUT_ARGS,
   GIT_COMMAND,
   GIT_COMMANDS,
   GIT_COMMIT_ARGS,
-  LIST_BRANCHES,
+  GIT_LIST_PROMPT_MESSAGE,
+  GIT_LIST_PROMPT_NAME,
+  GIT_LIST_BRANCHES,
+  GIT_LIST_BRANCH_PROMPT_NAME,
+  GIT_LIST_BRANCH_PROMPT_MESSAGE,
+  GIT_COMMIT_PROMPT_NAME,
+  GIT_COMMIT_PROMPT_MESSAGE,
+  GIT_COMMIT_EMPTY_INPUT_ERROR_MESSAGE,
+  GIT_COMMIT_CANCELLED_MESSAGE,
+  GIT_COMMIT_SUCCESS_MESSAGE,
+  GIT_COMMIT_FAILED_MESSAGE,
+  GIT_CREATE_BRANCH_PROMPT_NAME,
+  GIT_CREATE_BRANCH_PROMPT_MESSAGE,
+  GIT_CREATE_BRANCH_EMPTY_INPUT_ERROR_MESSAGE,
+  GIT_CREATE_BRANCH_CANCELLED_MESSAGE,
+  GIT_TITLE,
 } from '../config.js';
+import {
+  branchSwitchedMessage,
+  commitConfirmationMessage,
+  confirmPrompt,
+  createBranchConfirmationMessage,
+  inputPrompt,
+  listPrompt,
+  listPromptChoices,
+} from './util.js';
 
 const git = simpleGit();
 
 export function gitCommands() {
-  printTitle('- GIT COMMANDS -');
+  printTitle(GIT_TITLE);
 
   inquirer
     .prompt(
       listPrompt(
-        'command',
-        'Select a git command',
-        [...GIT_COMMANDS, new inquirer.Separator(), EXIT_OPTION],
+        GIT_LIST_PROMPT_NAME,
+        GIT_LIST_PROMPT_MESSAGE,
+        listPromptChoices(GIT_COMMANDS),
         GIT_COMMANDS.length + 2
       )
     )
     .then((answer) => {
       switch (answer.command) {
-        case ADD_ALL:
+        case GIT_ADD_ALL:
           gitAddAll();
           return;
-        case LIST_BRANCHES:
+        case GIT_LIST_BRANCHES:
           gitListBranches();
           return;
-        case COMMIT:
+        case GIT_COMMIT:
           gitCommit();
           return;
-        case CREATE_BRANCH:
+        case GIT_CREATE_BRANCH:
           gitCreateBranch();
           return;
         case EXIT_OPTION:
@@ -62,23 +91,20 @@ export function gitCommands() {
 
 async function gitAddAll() {
   try {
-    const confirmAnswer = await inquirer.prompt(
-      confirmPrompt('Are you sure you want to add all?')
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(GIT_ADD_CONFIRM_MESSAGE)
     );
 
-    if (!confirmAnswer.confirmation) {
-      printError('Git added cancelled.');
+    if (!confirmation) {
+      printError(GIT_ADD_CANCELLED_MESSAGE);
       return;
     }
-
-    // Extra line spaces
-    console.log();
 
     processCommand(
       GIT_COMMAND,
       GIT_ADD_ARGS,
-      'Changes have been successfully staged for the next commit.',
-      'Failed to stage changes.'
+      GIT_ADD_SUCCESS_MESSAGE,
+      GIT_ADD_FAILED_MESSAGE
     );
   } catch (err) {
     printForceClosedError(err);
@@ -94,9 +120,9 @@ async function gitListBranches() {
     // Prompt user to select a branch
     const { branch } = await inquirer.prompt(
       listPrompt(
-        'branch',
-        'Select a branch',
-        [...branchNames, new inquirer.Separator(), EXIT_OPTION],
+        GIT_LIST_BRANCH_PROMPT_NAME,
+        GIT_LIST_BRANCH_PROMPT_MESSAGE,
+        listPromptChoices(branchNames),
         branchNames.length + 2
       )
     );
@@ -108,7 +134,7 @@ async function gitListBranches() {
 
     // Checkout selected branches
     await git.checkout(branch);
-    printSuccess(`Switched to branch: ${branch}\n`);
+    printSuccess(branchSwitchedMessage(branch));
   } catch (err) {
     printForceClosedError(err);
   }
@@ -116,23 +142,21 @@ async function gitListBranches() {
 
 async function gitCommit() {
   try {
-    const answer = await inquirer.prompt(
-      inputPrompt('commitMessage', 'Commit Message:')
+    const { commitMessage } = await inquirer.prompt(
+      inputPrompt(GIT_COMMIT_PROMPT_NAME, GIT_COMMIT_PROMPT_MESSAGE)
     );
 
-    if (!answer.commitMessage) {
-      printError('You must provide a commit message.');
+    if (!commitMessage) {
+      printError(GIT_COMMIT_EMPTY_INPUT_ERROR_MESSAGE);
       return;
     }
 
-    const confirmAnswer = await inquirer.prompt(
-      confirmPrompt(
-        `Are you sure you want to commit with\n"${answer.commitMessage}"?`
-      )
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(commitConfirmationMessage(commitMessage))
     );
 
-    if (!confirmAnswer.confirmation) {
-      printError('Git commit cancelled.');
+    if (!confirmation) {
+      printError(GIT_COMMIT_CANCELLED_MESSAGE);
       return;
     }
 
@@ -141,9 +165,9 @@ async function gitCommit() {
 
     processCommand(
       GIT_COMMAND,
-      [...GIT_COMMIT_ARGS, answer.commitMessage],
-      'Commit completed.',
-      'Commit failed.'
+      [...GIT_COMMIT_ARGS, commitMessage],
+      GIT_COMMIT_SUCCESS_MESSAGE,
+      GIT_COMMIT_FAILED_MESSAGE
     );
   } catch (err) {
     printForceClosedError(err);
@@ -152,23 +176,24 @@ async function gitCommit() {
 
 async function gitCreateBranch() {
   try {
-    const answer = await inquirer.prompt(
-      inputPrompt('createBranch', 'Create a new branch name:')
-    );
-
-    if (!answer.createBranch) {
-      printError('You must provide a branch name.');
-      return;
-    }
-
-    const confirmAnswer = await inquirer.prompt(
-      confirmPrompt(
-        `Are you sure you want to create a branch named "${answer.createBranch}"?`
+    const { createBranch } = await inquirer.prompt(
+      inputPrompt(
+        GIT_CREATE_BRANCH_PROMPT_NAME,
+        GIT_CREATE_BRANCH_PROMPT_MESSAGE
       )
     );
 
-    if (!confirmAnswer.confirmation) {
-      printError('Git branch creation cancelled.');
+    if (!createBranch) {
+      printError(GIT_CREATE_BRANCH_EMPTY_INPUT_ERROR_MESSAGE);
+      return;
+    }
+
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(createBranchConfirmationMessage(createBranch))
+    );
+
+    if (!confirmation) {
+      printError(GIT_CREATE_BRANCH_CANCELLED_MESSAGE);
       return;
     }
 
@@ -177,9 +202,9 @@ async function gitCreateBranch() {
 
     processCommand(
       GIT_COMMAND,
-      [...GIT_CHECKOUT_ARGS, answer.createBranch],
-      'Branch created and now active.',
-      'Branch creation and checkout failed.'
+      [...GIT_CHECKOUT_ARGS, createBranch],
+      GIT_CREATE_BRANCH_SUCCESS_MESSAGE,
+      GIT_CREATE_BRANCH_FAILED_MESSAGE
     );
   } catch (err) {
     printForceClosedError(err);

@@ -8,9 +8,29 @@ import {
   printTitle,
 } from './print.js';
 import { deleteKey, getKey, saveKey } from './keyManagement.js';
-import { confirmPrompt, inputPrompt, passwordPrompt } from './prompts.js';
 import { processCommand } from './process.js';
-import { aiPrompt, GEMINI_MODEL, invalidQuestionMessage } from '../config.js';
+import {
+  AI_ASK_CANCELLED_MESSAGE,
+  AI_ASK_CONFIRM_MESSAGE,
+  AI_ASK_EMPTY_QUESTION_MESSAGE,
+  AI_ASK_ERROR_MESSAGE,
+  AI_ASK_PROMPT_MESSAGE,
+  AI_ASK_PROMPT_NAME,
+  AI_EMPTY_API_ERROR_MESSAGE,
+  AI_GEMINI_MODEL,
+  AI_INVALID_QUESTION_MESSAGE,
+  AI_KEY_DELETE_MESSAGE,
+  AI_PROMPT_MESSAGE,
+  AI_PROMPT_NAME,
+  AI_TITLE,
+  CLOSING_APP_MESSAGE,
+} from '../config.js';
+import {
+  aiPrompt,
+  confirmPrompt,
+  inputPrompt,
+  passwordPrompt,
+} from './util.js';
 
 let genAI;
 let model;
@@ -20,27 +40,27 @@ let password;
 export async function aiCommands() {
   password = await getKey();
 
-  printTitle('- AI -');
+  printTitle(AI_TITLE);
 
   try {
     if (!password) {
-      const answer = await inquirer.prompt(
-        passwordPrompt('apiKey', 'Enter your API key:')
+      const { apiKey } = await inquirer.prompt(
+        passwordPrompt(AI_PROMPT_NAME, AI_PROMPT_MESSAGE)
       );
 
-      if (!answer.apiKey) {
-        printError('You must provide an API key.');
+      if (!apiKey) {
+        printError(AI_EMPTY_API_ERROR_MESSAGE);
         return;
       }
 
-      key = answer.apiKey;
-      saveKey(answer.apiKey);
+      key = apiKey;
+      saveKey(apiKey);
     } else {
       key = await getKey();
     }
 
     genAI = new GoogleGenerativeAI(key);
-    model = genAI.getGenerativeModel(GEMINI_MODEL);
+    model = genAI.getGenerativeModel(AI_GEMINI_MODEL);
 
     askAI();
   } catch (err) {
@@ -52,31 +72,31 @@ async function askAI() {
   let commandString;
 
   try {
-    const answer = await inquirer.prompt(inputPrompt('aiQuestion', 'Ask AI:'));
+    const { aiQuestion } = await inquirer.prompt(
+      inputPrompt(AI_ASK_PROMPT_NAME, AI_ASK_PROMPT_MESSAGE)
+    );
 
-    if (!answer.aiQuestion) {
-      printError('You must provide a question.');
+    if (!aiQuestion) {
+      printError(AI_ASK_EMPTY_QUESTION_MESSAGE);
       return;
     }
 
-    const result = await model.generateContent(
-      aiPrompt(answer.aiQuestion, invalidQuestionMessage)
-    );
+    const result = await model.generateContent(aiPrompt(aiQuestion));
     commandString = result.response.text();
 
-    if (commandString.includes(invalidQuestionMessage)) {
-      printError(invalidQuestionMessage);
+    if (commandString.includes(AI_INVALID_QUESTION_MESSAGE)) {
+      printError(AI_INVALID_QUESTION_MESSAGE);
       return;
     }
 
     console.log('\n', commandString);
 
-    const confirm = await inquirer.prompt(
-      confirmPrompt('Would you like to run the command?')
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(AI_ASK_CONFIRM_MESSAGE)
     );
 
-    if (!confirm.confirmation) {
-      printError('Command execution cancelled.');
+    if (!confirmation) {
+      printError(AI_ASK_CANCELLED_MESSAGE);
       return;
     }
   } catch (err) {
@@ -91,15 +111,15 @@ async function askAI() {
   // return and remove the first element from the args array
   const command = args.shift();
   // Execute the command
-  processCommand(command, args, 'Exiting the Caller CLI. Goodbye!', 'AI Error');
+  processCommand(command, args, CLOSING_APP_MESSAGE, AI_ASK_ERROR_MESSAGE);
 }
 
 export async function deleteAPIKey() {
   await deleteKey()
     .then(() => {
-      printSuccess('API key deleted.');
+      printSuccess(AI_KEY_DELETE_MESSAGE);
     })
     .catch((err) => {
-      printError('Error deleting API key: ' + err.message);
+      printError(err.message);
     });
 }

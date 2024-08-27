@@ -9,14 +9,41 @@ import {
   printRunningCommand,
   printForceClosedError,
 } from './print.js';
-import { confirmPrompt, listPrompt } from './prompts.js';
 import { processCommand } from './process.js';
-import { COMMAND_FILE, EXIT_OPTION } from '../config.js';
+import {
+  COMMANDS_LIST_PROMPT_NAME,
+  COMMAND_FILE_LOCATION,
+  COMMANDS_ADD_CANCELLED_MESSAGE,
+  COMMANDS_ADD_TITLE,
+  COMMANDS_LIST_EMPTY_LIST_MESSAGE,
+  COMMANDS_LIST_TITLE,
+  EXIT_OPTION,
+  COMMANDS_LIST_PROMPT_MESSAGE,
+  COMMANDS_REMOVE_TITLE,
+  COMMANDS_REMOVE_CONFIRM_MESSAGE,
+  COMMANDS_REMOVE_CANCELLED_MESSAGE,
+  COMMANDS_RENAME_NAMING_ERROR_MESSAGE,
+  COMMANDS_RENAME_TITLE,
+  COMMANDS_RENAME_CONFIRM_MESSAGE,
+  COMMANDS_RENAME_CANCELLED_MESSAGE,
+  COMMANDS_EXECUTE_SUCCESS_MESSAGE,
+  COMMANDS_EXECUTE_FAILURE_MESSAGE,
+} from '../config.js';
+import {
+  listPrompt,
+  confirmPrompt,
+  listPromptChoices,
+  addConfirmationMessage,
+  addSuccessMessage,
+  noCommandMessage,
+  commandRemovedMessage,
+  renameSuccessMessage,
+} from './util.js';
 
 // Load commands
 export function loadCommands() {
   try {
-    return jsonfile.readFileSync(COMMAND_FILE);
+    return jsonfile.readFileSync(COMMAND_FILE_LOCATION);
   } catch (err) {
     return {};
   }
@@ -24,7 +51,9 @@ export function loadCommands() {
 
 // Save command
 export function saveCommands(commands) {
-  jsonfile.writeFileSync(COMMAND_FILE, commands, commands, { spaces: 4 });
+  jsonfile.writeFileSync(COMMAND_FILE_LOCATION, commands, commands, {
+    spaces: 4,
+  });
 }
 
 // Add command
@@ -32,20 +61,20 @@ export async function addCommand(name, cmd) {
   const commands = loadCommands();
   commands[name] = cmd.join(' ');
 
-  printTitle('- Add -');
+  printTitle(COMMANDS_ADD_TITLE);
 
   try {
-    const confirmAnswer = await inquirer.prompt(
-      confirmPrompt(`Are you sure you want to add "${name}"?`)
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(addConfirmationMessage(name))
     );
 
-    if (!confirmAnswer.confirmation) {
-      printError('Command added cancelled.');
+    if (!confirmation) {
+      printError(COMMANDS_ADD_CANCELLED_MESSAGE);
       return;
     }
 
     saveCommands(commands);
-    printSuccess(`Command '${name}' added.`);
+    printSuccess(addSuccessMessage(name));
   } catch (err) {
     printForceClosedError(err);
   }
@@ -58,10 +87,10 @@ export function listCommands() {
     a.localeCompare(b)
   );
 
-  printTitle('- LIST -');
+  printTitle(COMMANDS_LIST_TITLE);
 
   if (sortedCommandNames.length === 0) {
-    printError('No commands saved!');
+    printError(COMMANDS_LIST_EMPTY_LIST_MESSAGE);
     return;
   }
 
@@ -69,14 +98,14 @@ export function listCommands() {
   inquirer
     .prompt(
       listPrompt(
-        'cmd',
-        'Select command',
-        [...sortedCommandNames, new inquirer.Separator(), EXIT_OPTION],
+        COMMANDS_LIST_PROMPT_NAME,
+        COMMANDS_LIST_PROMPT_MESSAGE,
+        listPromptChoices(sortedCommandNames),
         sortedCommandNames.length + 2
       )
     )
-    .then((answers) => {
-      runCommand(answers.cmd);
+    .then(({ cmd }) => {
+      runCommand(cmd);
     })
     .catch((err) => {
       printForceClosedError(err);
@@ -88,25 +117,25 @@ export async function removeCommands(name) {
   const commands = loadCommands();
 
   if (!commands[name]) {
-    printError(`No command found with the name '${name}'`);
+    printError(noCommandMessage(name));
     return;
   }
 
-  printTitle('- Remove -');
+  printTitle(COMMANDS_REMOVE_TITLE);
 
   try {
-    const answer = await inquirer.prompt(
-      confirmPrompt('Are you sure you want to remove?')
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(COMMANDS_REMOVE_CONFIRM_MESSAGE)
     );
 
-    if (!answer.confirmation) {
-      printError('Rename cancelled.');
+    if (!confirmation) {
+      printError(COMMANDS_REMOVE_CANCELLED_MESSAGE);
       return;
     }
 
     delete commands[name];
     saveCommands(commands);
-    printSuccess(`Command '${name}' removed.`);
+    printSuccess(commandRemovedMessage(name));
   } catch (err) {
     printForceClosedError(err);
   }
@@ -114,34 +143,34 @@ export async function removeCommands(name) {
 
 // Rename command
 export async function renamedCommands(oldName, newName) {
+  printTitle(COMMANDS_RENAME_TITLE);
+
   if (oldName === newName) {
-    printError('Old name and new name cannot be the same.');
+    printError(COMMANDS_RENAME_NAMING_ERROR_MESSAGE);
     return;
   }
 
   const commands = loadCommands();
 
   if (!commands[oldName]) {
-    printError(`No command found with the name '${oldName}'`);
+    printError(noCommandMessage(oldName));
     return;
   }
 
-  printTitle('- Rename -');
-
   try {
-    const answer = await inquirer.prompt(
-      confirmPrompt('Are you sure you want to rename?')
+    const { confirmation } = await inquirer.prompt(
+      confirmPrompt(COMMANDS_RENAME_CONFIRM_MESSAGE)
     );
 
-    if (!answer.confirmation) {
-      printError('Rename cancelled.');
+    if (!confirmation) {
+      printError(COMMANDS_RENAME_CANCELLED_MESSAGE);
       return;
     }
 
     commands[newName] = commands[oldName];
     delete commands[oldName];
     saveCommands(commands);
-    printSuccess(`Command '${oldName}' renamed to '${newName}'`);
+    printSuccess(renameSuccessMessage(oldName, newName));
   } catch (err) {
     printForceClosedError(err);
   }
@@ -155,17 +184,17 @@ export function runCommand(name) {
     const command = commands[name];
     const [cmd, ...args] = command.split(' ');
 
-    printRunningCommand(`${command}`);
+    printRunningCommand(command);
 
     processCommand(
       cmd,
       args,
-      'Command executed successfully.',
-      'Command failed to execute.'
+      COMMANDS_EXECUTE_SUCCESS_MESSAGE,
+      COMMANDS_EXECUTE_FAILURE_MESSAGE
     );
   } else if (name === EXIT_OPTION) {
     printExit();
   } else {
-    printError(`No command found with the name '${name}'`);
+    printError(noCommandMessage(name));
   }
 }
