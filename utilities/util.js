@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import { EXIT_OPTION, AI_INVALID_QUESTION_MESSAGE } from '../config.js';
+import { blueBrightText } from './print.js';
 
 // LIST
 export const listPrompt = (name, message, choices, pageSize) => [
@@ -45,10 +46,10 @@ export const passwordPrompt = (name, message) => [
 export const listPromptChoices = (options) => {
   return [...options, new inquirer.Separator(), EXIT_OPTION];
 };
-export const addConfirmationMessage = (name) => {
+export const addCommandConfirmationMessage = (name) => {
   return `Are you sure you want to add "${name}"?`;
 };
-export const addSuccessMessage = (name) => {
+export const addCommandSuccessMessage = (name) => {
   return `Command '${name}' added.`;
 };
 export const noCommandMessage = (name) => {
@@ -57,7 +58,7 @@ export const noCommandMessage = (name) => {
 export const commandRemovedMessage = (name) => {
   return `Command '${name}' removed.`;
 };
-export const renameSuccessMessage = (oldName, newName) => {
+export const renameCommandSuccessMessage = (oldName, newName) => {
   return `Command '${oldName}' renamed to '${newName}'`;
 };
 
@@ -66,7 +67,7 @@ export const branchSwitchedMessage = (branch) => {
   return `Switched to branch: ${branch}\n`;
 };
 export const commitConfirmationMessage = (message) => {
-  return `Are you sure you want to commit with\n"${message}"?`;
+  return `Are you sure you want to commit with "${blueBrightText(message)}"?`;
 };
 export const createBranchConfirmationMessage = (message) => {
   return `Are you sure you want to create a branch named "${message}"?`;

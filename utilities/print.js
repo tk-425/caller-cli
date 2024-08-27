@@ -37,3 +37,7 @@ export function printTitle(title) {
 export function printExit() {
   printSuccess(CLOSING_APP_MESSAGE);
 }
+
+export function blueBrightText(text) {
+  return chalk.blueBright(text);
+}
