@@ -75,7 +75,7 @@ export const createBranchConfirmationMessage = (branch) => {
   )}"?`;
 };
 export const currentBranchMessage = (branch) => {
-  return `\nCurrent branch: ${greenBrightText(branch)}\n`;
+  return `Current branch: ${greenBrightText(branch)}\n`;
 };
 export const pushBranchConfirmationMessage = (branch) => {
   return `Do you want to push the branch ${greenBrightText(branch)}?`;
