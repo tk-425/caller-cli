@@ -22,7 +22,7 @@ Caller-CLI is a handy command-line tool that makes your life easier by simplifyi
    ```
 5. Create a Symlink to your script
    ```bash
-   sudo ln -s /usr/local/share/caller-cli/caller.js /usr/local/bin/caller
+   sudo ln -s /usr/local/share/caller-cli/bin/caller.js /usr/local/bin/caller
    ```
 6. Install NPM packages
    ```bash
