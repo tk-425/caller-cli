@@ -9,7 +9,7 @@ import {
   removeCommand,
   renameCommand,
 } from '../lib/commands/list.js';
-import { gitCommands } from '../lib/commands/git.js';
+import { gitListCommands } from '../lib/commands/git.js';
 import { aiCommands, deleteAPIKey } from '../lib/commands/ai.js';
 import { update } from '../lib/commands/update.js';
 import { VERSION } from '../lib/config.js';
@@ -43,7 +43,7 @@ function main() {
   program
     .command('git')
     .description('Git commands')
-    .action(() => gitCommands());
+    .action(() => gitListCommands());
 
   // AI command
   program
