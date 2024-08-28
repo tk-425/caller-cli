@@ -4,10 +4,10 @@ import { program } from 'commander';
 
 import {
   addCommand,
-  listCommands,
+  listCommand,
   runCommand,
-  removeCommands,
-  renamedCommands,
+  removeCommand,
+  renameCommand,
 } from '../lib/commands/list.js';
 import { gitCommands } from '../lib/commands/git.js';
 import { aiCommands, deleteAPIKey } from '../lib/commands/ai.js';
@@ -25,19 +25,19 @@ function main() {
   program
     .command('list')
     .description('List all saved commands')
-    .action(() => listCommands());
+    .action(() => listCommand());
 
   // Remove command
   program
     .command('remove <name>')
     .description('Remove a saved command')
-    .action((name) => removeCommands(name));
+    .action((name) => removeCommand(name));
 
   // Rename command
   program
     .command('rename <oldName> <newName>')
     .description('Rename a saved command')
-    .action((oldName, newName) => renamedCommands(oldName, newName));
+    .action((oldName, newName) => renameCommand(oldName, newName));
 
   // Git commands
   program
