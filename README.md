@@ -12,9 +12,9 @@ Caller-CLI is a handy command-line tool that makes your life easier by simplifyi
    ```bash
    sudo mv /path/to/repository/ /usr/local/share
    ```
-3. Navigate to the `/usr/local/share/caller-cli` directory
+3. Navigate to the `/usr/local/share/caller-cli/bin` directory
    ```bash
-   cd /usr/local/share/caller-cli
+   cd /usr/local/share/caller-cli/bin
    ```
 4. Make the `caller.js` script executable
    ```bash
@@ -26,7 +26,7 @@ Caller-CLI is a handy command-line tool that makes your life easier by simplifyi
    ```
 6. Install NPM packages
    ```bash
-   npm install
+   cd .. && npm install
    ```
 7. Restart your terminal
 8. Use `caller <command>` to run the Caller-CLI command
