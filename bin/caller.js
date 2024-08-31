@@ -13,6 +13,7 @@ import { gitListCommands } from '../lib/commands/git.js';
 import { aiCommands, deleteAPIKey } from '../lib/commands/ai.js';
 import { update } from '../lib/commands/update.js';
 import { VERSION } from '../lib/config.js';
+import { build } from '../lib/commands/build.js';
 
 function main() {
   // Add command
@@ -71,6 +72,12 @@ function main() {
     .arguments('<name>')
     .description('Run a saved command')
     .action((name) => runCommand(name));
+
+  // Build
+  program
+    .command('build')
+    .description('Build a custom command')
+    .action(() => build());
 
   program.parse(process.argv);
 }
