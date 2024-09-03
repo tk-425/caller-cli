@@ -20,15 +20,15 @@ export const commandRemovedMessage = (name) => {
 };
 export const removeCommandMessage = (name) => {
   return `Are you sure you want to remove '${greenBrightText(name)}'`;
-}
+};
 export const renameCommandSuccessMessage = (oldName, newName) => {
   return `Command '${redBrightText(oldName)}' renamed to '${greenBrightText(
     newName
   )}'`;
 };
 export const renameCommandFailureMessage = (name) => {
- return `The name '${name}' already exists.`;
-}
+  return `The name '${name}' already exists.`;
+};
 
 // GIT
 export const branchSwitchedMessage = (branch) => {
