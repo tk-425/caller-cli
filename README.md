@@ -26,7 +26,7 @@ Caller-CLI is a handy command-line tool that makes your life easier by simplifyi
    ```
 6. Install NPM packages
    ```bash
-   cd .. && npm install
+   cd .. && npm install --omit=dev
    ```
 7. Restart your terminal
 8. Use `caller <command>` to run the Caller-CLI command
