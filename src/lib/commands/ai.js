@@ -66,7 +66,7 @@ async function askAI() {
     const command = args.shift();
 
     // Execute the command
-    executeCommand([
+    await executeCommand([
       {
         command: command,
         args: args,

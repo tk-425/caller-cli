@@ -78,7 +78,7 @@ export async function listCommand() {
       sortedCommandNames.length + 2
     );
 
-    runCommand(cmd);
+    await runCommandFromList(cmd);
   } catch (err) {
     handleErrors(err);
   }
@@ -144,7 +144,7 @@ export async function removeCommand(name) {
 }
 
 // Run the command
-export function runCommand(name) {
+export async function runCommandFromList(name) {
   processExitOption(name);
 
   if (commands[name]) {
@@ -153,7 +153,7 @@ export function runCommand(name) {
 
     printRunningCommand(command);
 
-    executeCommand([
+    await executeCommand([
       {
         command: cmd,
         args: args,
