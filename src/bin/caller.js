@@ -5,7 +5,7 @@ import { program } from 'commander';
 import {
   addCommand,
   listCommand,
-  runCommand,
+  runCommandFromList,
   removeCommand,
   renameCommand,
 } from '../lib/commands/list.js';
@@ -77,7 +77,7 @@ function main() {
   program
     .arguments('<name>')
     .description('Run a saved command')
-    .action((name) => runCommand(name));
+    .action((name) => runCommandFromList(name));
 
   program.parse(process.argv);
 }

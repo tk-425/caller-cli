@@ -20,14 +20,14 @@ export async function executeCommand(commands) {
   }
 }
 
-function runCommand(command, args, successMessage, errorMessage) {
+export function runCommand(command, args, successMessage, errorMessage) {
   return new Promise((resolve, reject) => {
     const process = spawn(command, args, STDIO_INHERIT);
 
     process.on('close', (code) => {
       if (code === 0) {
         printSuccess(successMessage);
-        resolve();
+        resolve(code);
       } else {
         reject(new RunCommandError(processNonZeroCodeMessage(code)));
       }

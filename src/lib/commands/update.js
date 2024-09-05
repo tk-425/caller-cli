@@ -40,7 +40,7 @@ export async function update() {
       errorMessage: config.UPDATE_NPM_INSTALLED_FAILED_MESSAGE,
     };
 
-    executeCommand([
+    await executeCommand([
       gitResetCommand,
       gitPullCommand,
       npmUpdateCommand,

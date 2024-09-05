@@ -86,7 +86,7 @@ async function gitAddAll() {
   try {
     await processConfirm(config.GIT_ADD_CONFIRM_MESSAGE);
 
-    executeCommand([
+    await executeCommand([
       {
         command: config.GIT_COMMAND,
         args: config.GIT_ADD_ARGS,
@@ -126,7 +126,7 @@ async function gitCommit() {
     // Extra line spaces
     console.log();
 
-    executeCommand([
+    await executeCommand([
       {
         command: config.GIT_COMMAND,
         args: [...config.GIT_COMMIT_ARGS, input],
@@ -151,7 +151,7 @@ async function gitCreateBranch() {
     // Extra line spaces
     console.log();
 
-    executeCommand([
+    await executeCommand([
       {
         command: config.GIT_COMMAND,
         args: [...config.GIT_CHECKOUT_ARGS, input],
