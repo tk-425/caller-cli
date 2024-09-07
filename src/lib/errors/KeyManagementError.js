@@ -1,6 +1,6 @@
 export class KeyManagementError extends Error {
   constructor(message) {
-    super('KeyManagementError:', message);
+    super(message);
     this.name = 'KeyManagementError';
   }
 }
