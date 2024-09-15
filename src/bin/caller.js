@@ -12,7 +12,6 @@ import {
 import { gitListCommands } from '../lib/commands/git.js';
 import { aiCommands, deleteAPIKey } from '../lib/commands/ai.js';
 import { update } from '../lib/commands/update.js';
-import { build } from '../lib/commands/build.js';
 import { VERSION } from '../lib/config.js';
 
 function main() {
@@ -51,12 +50,6 @@ function main() {
     .command('ai')
     .description('AI command')
     .action(() => aiCommands());
-
-  // Custom command build
-  program
-    .command('build')
-    .description('Build custom command')
-    .action(() => build());
 
   // Delete API key
   program
