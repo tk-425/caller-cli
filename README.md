@@ -120,6 +120,8 @@ $ caller git
   Commit
   List Branches
   Create Branch
+  Push to current branch
+  Select a branch to push
   -------------
   EXIT
 ```
