@@ -22,7 +22,7 @@ export async function executeCommand(commands) {
 
 export function runCommand(command, args, successMessage, errorMessage) {
   return new Promise((resolve, reject) => {
-    const process = spawn(command, args, STDIO_INHERIT);
+    const process = spawn(command, args, { ...STDIO_INHERIT, shell: true });
 
     process.on('close', (code) => {
       if (code === 0) {

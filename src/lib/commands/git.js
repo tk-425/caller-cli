@@ -129,7 +129,7 @@ async function gitCommit() {
     await executeCommand([
       {
         command: config.GIT_COMMAND,
-        args: [...config.GIT_COMMIT_ARGS, input],
+        args: [...config.GIT_COMMIT_ARGS, `"{input}"`],
         successMessage: config.GIT_COMMIT_SUCCESS_MESSAGE,
         errorMessage: config.GIT_COMMIT_FAILED_MESSAGE,
       },
