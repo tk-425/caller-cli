@@ -1,5 +1,5 @@
 // Caller-CLI
-export const VERSION = 'v1.4.8';
+export const VERSION = 'v1.4.9';
 export const EXIT_OPTION = 'EXIT';
 export const COMMAND_FILE_LOCATION =
   '/usr/local/share/caller-cli/caller-cli-commands.json';
@@ -92,7 +92,8 @@ export const GIT_PUSH_BRANCH_SUCCESS_MESSAGE = 'Push branch succeeded.';
 
 // AI
 export const AI_TITLE = '- AI -';
-export const AI_GEMINI_MODEL = { model: 'gemini-1.5-flash' };
+// export const AI_GEMINI_MODEL = { model: 'gemini-1.5-flash' };
+export const AI_GEMINI_MODEL = { model: 'gemini-2.0-flash' };
 
 // AI - COMMANDS
 export const AI_COMMANDS_PROMPT_NAME = 'apiKey';
