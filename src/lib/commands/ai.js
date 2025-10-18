@@ -1,10 +1,11 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { printMessage, printSuccess, printTitle } from '../utils/print.js';
+import { printMessage, printSuccess, printTitle, printNewline } from '../utils/print.js';
 import { deleteKey, getKey, saveKey } from '../utils/keyManagement.js';
 import { executeCommand } from '../utils/executeCommand.js';
 import { aiPrompt } from '../utils/messages.js';
 import { handleErrors } from '../errors/handleError.js';
 import { isAiQuestionValid } from '../errors/errorChecking.js';
+import { InvalidCommandError } from '../errors/InvalidCommandError.js';
 import {
   processConfirm,
   processInput,
@@ -13,6 +14,22 @@ import {
 import * as config from '../config.js';
 
 let model;
+
+// Validate Gemini API key format
+function validateGeminiKeyFormat(key) {
+  // Basic validation: Gemini keys are typically alphanumeric with underscores/hyphens
+  // and at least 20 characters long
+  if (!key || key.length < 20) {
+    return false;
+  }
+
+  // Check if key contains only valid characters
+  if (!/^[A-Za-z0-9_-]+$/.test(key)) {
+    return false;
+  }
+
+  return true;
+}
 
 export async function aiCommands() {
   try {
@@ -25,6 +42,13 @@ export async function aiCommands() {
         config.AI_COMMANDS_PROMPT_NAME,
         config.AI_COMMANDS_PROMPT_MESSAGE
       );
+
+      // Validate API key format before saving
+      if (!validateGeminiKeyFormat(password)) {
+        throw new Error(
+          'Invalid API key format. Gemini API keys should be at least 20 characters and contain only letters, numbers, underscores, and hyphens.'
+        );
+      }
 
       saveKey(password);
     }
@@ -57,13 +81,26 @@ async function askAI() {
     await processConfirm(config.AI_ASK_CONFIRM_MESSAGE);
 
     // Extra line spaces
-    console.log();
+    printNewline();
 
     // Split the response into an array
     const args = commandString.trim().split(' ');
 
     // return and remove the first element from the args array
     const command = args.shift();
+
+    // Validate command is in whitelist (security check)
+    if (!config.AI_ALLOWED_COMMANDS.includes(command)) {
+      throw new InvalidCommandError(command);
+    }
+
+    // Check for dangerous shell operators
+    const fullCommand = [command, ...args].join(' ');
+    if (/[;&|`$()<>]/.test(fullCommand)) {
+      throw new Error(
+        'Command contains shell operators which are not allowed for security reasons.'
+      );
+    }
 
     // Execute the command
     await executeCommand([

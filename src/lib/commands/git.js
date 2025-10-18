@@ -1,5 +1,5 @@
 import simpleGit from 'simple-git';
-import { printSuccess, printTitle, printMessage } from '../utils/print.js';
+import { printSuccess, printTitle, printMessage, printNewline } from '../utils/print.js';
 import { executeCommand } from '../utils/executeCommand.js';
 import { GitCurrentBranchError } from '../errors/GitCurrentBranchError.js';
 import { handleErrors } from '../errors/handleError.js';
@@ -20,6 +20,33 @@ import {
 import * as config from '../config.js';
 
 const git = simpleGit();
+
+// Validate git branch name
+function validateBranchName(name) {
+  // Git branch name rules
+  const invalidChars = /[~^:?*\[\]\\]/;
+  if (invalidChars.test(name)) {
+    throw new Error(
+      'Invalid branch name. Cannot contain: ~ ^ : ? * [ ] \\'
+    );
+  }
+  if (name.startsWith('-')) {
+    throw new Error('Invalid branch name. Cannot start with a hyphen.');
+  }
+  if (name.includes('..')) {
+    throw new Error('Invalid branch name. Cannot contain consecutive dots (..).');
+  }
+  if (name.endsWith('.lock')) {
+    throw new Error('Invalid branch name. Cannot end with .lock');
+  }
+}
+
+// Sanitize commit message by escaping quotes
+function sanitizeCommitMessage(message) {
+  // Escape double quotes and backslashes
+  return message.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
 const getCurrentBranch = async () => {
   try {
     const { current } = await git.branchLocal();
@@ -121,15 +148,18 @@ async function gitCommit() {
       config.GIT_COMMIT_PROMPT_MESSAGE
     );
 
+    // Sanitize commit message
+    const sanitizedMessage = sanitizeCommitMessage(input);
+
     await processConfirm(commitConfirmationMessage(input));
 
     // Extra line spaces
-    console.log();
+    printNewline();
 
     await executeCommand([
       {
         command: config.GIT_COMMAND,
-        args: [...config.GIT_COMMIT_ARGS, `"${input}"`],
+        args: [...config.GIT_COMMIT_ARGS, `"${sanitizedMessage}"`],
         successMessage: config.GIT_COMMIT_SUCCESS_MESSAGE,
         errorMessage: config.GIT_COMMIT_FAILED_MESSAGE,
       },
@@ -146,10 +176,13 @@ async function gitCreateBranch() {
       config.GIT_CREATE_BRANCH_PROMPT_MESSAGE
     );
 
+    // Validate branch name
+    validateBranchName(input);
+
     await processConfirm(createBranchConfirmationMessage(input));
 
     // Extra line spaces
-    console.log();
+    printNewline();
 
     await executeCommand([
       {

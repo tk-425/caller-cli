@@ -1,6 +1,6 @@
 export class RunCommandError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'RunCommandError';
+    this.name = this.constructor.name;
   }
 }

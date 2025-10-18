@@ -1,4 +1,4 @@
-import { printTitle } from '../utils/print.js';
+import { printTitle, printNewline } from '../utils/print.js';
 import { executeCommand } from '../utils/executeCommand.js';
 import { handleErrors } from '../errors/handleError.js';
 import { processConfirm } from '../utils/prompts.js';
@@ -10,7 +10,7 @@ export async function update() {
 
     await processConfirm(config.UPDATE_PROMPT_MESSAGE);
 
-    console.log();
+    printNewline();
 
     const gitResetCommand = {
       command: config.GIT_COMMAND,
