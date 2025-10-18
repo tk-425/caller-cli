@@ -47,7 +47,7 @@ export function checkNames(oldNames, newNames) {
 }
 
 export function checkInput(input) {
-  if (!input) {
+  if (!input || !input.trim()) {
     throw new EmptyInputError();
   }
 }

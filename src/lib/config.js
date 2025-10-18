@@ -1,8 +1,17 @@
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Get the directory of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const PROJECT_ROOT = join(__dirname, '../..');
+
 // Caller-CLI
-export const VERSION = 'v1.5.0';
+export const VERSION = 'v1.5.1';
 export const EXIT_OPTION = 'EXIT';
 export const COMMAND_FILE_LOCATION =
-  '/usr/local/share/caller-cli/caller-cli-commands.json';
+  process.env.CALLER_CLI_PATH ||
+  join(PROJECT_ROOT, 'caller-cli-commands.json');
 export const CLOSING_APP_MESSAGE = 'Exiting the Caller CLI. Goodbye!';
 
 // PROMPT NAME
@@ -105,6 +114,33 @@ export const AI_ASK_PROMPT_MESSAGE = 'Ask AI:';
 export const AI_ASK_CONFIRM_MESSAGE = 'Would you like to run the command?';
 export const AI_ASK_ERROR_MESSAGE = 'AI Error';
 
+// AI - ALLOWED COMMANDS (whitelist for security)
+export const AI_ALLOWED_COMMANDS = [
+  'npm',
+  'git',
+  'ls',
+  'cd',
+  'pwd',
+  'mkdir',
+  'touch',
+  'cat',
+  'echo',
+  'grep',
+  'find',
+  'cp',
+  'mv',
+  'rm',
+  'chmod',
+  'node',
+  'python',
+  'pip',
+  'brew',
+  'which',
+  'man',
+  'curl',
+  'wget',
+];
+
 // AI - DELETE KEY
 export const AI_KEY_DELETE_TITLE = '- Delete API Key -';
 export const AI_KEY_DELETE_CONFIRM_MESSAGE =
@@ -121,14 +157,14 @@ export const UPDATE_PROMPT_MESSAGE =
 
 export const UPDATE_RESET_ARGS = [
   '-C',
-  '/usr/local/share/caller-cli',
+  PROJECT_ROOT,
   'reset',
   '--hard',
   'origin/main',
 ];
 export const UPDATE_PULL_ARGS = [
   '-C',
-  '/usr/local/share/caller-cli',
+  PROJECT_ROOT,
   'pull',
   '--rebase',
   'origin',
@@ -143,13 +179,13 @@ export const UPDATE_CALLER_CLI_FAILED_MESSAGE = 'Caller CLI update failed.';
 export const UPDATE_SH_COMMAND = 'sh';
 export const UPDATE_NPM_UPDATE_ARGS = [
   '-c',
-  'cd /usr/local/share/caller-cli && npm update --omit=dev && cd -',
+  `cd ${PROJECT_ROOT} && npm update --omit=dev && cd -`,
 ];
 export const UPDATE_NPM_UPDATE_SUCCESS_MESSAGE = 'NPM successfully updated.';
 export const UPDATE_NPM_UPDATE_FAILED_MESSAGE = 'NPM update failed.';
 export const UPDATE_NPM_INSTALL_ARGS = [
   '-c',
-  'cd /usr/local/share/caller-cli && npm install --omit=dev && cd -',
+  `cd ${PROJECT_ROOT} && npm install --omit=dev && cd -`,
 ];
 export const UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE =
   'NPM successfully installed.';

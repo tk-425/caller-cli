@@ -5,6 +5,7 @@ import {
   printSuccess,
   printTitle,
   printRunningCommand,
+  printWarning,
 } from '../utils/print.js';
 import {
   listPromptChoices,
@@ -31,16 +32,16 @@ import * as config from '../config.js';
 // Get the command list
 let commands = loadCommand();
 
-// Create a formatted command list to find the user-defined command name
-const formattedCommands = Object.keys(commands).map((key) => ({
-  name: key,
-  value: commands[key],
-}));
-
 // Get the user-defined command name
 const getCommandName = (name) => {
-  const entry = formattedCommands.find((command) => command.name === name);
+  // Reload commands to get fresh data
+  const currentCommands = loadCommand();
+  const formattedCommands = Object.keys(currentCommands).map((key) => ({
+    name: key,
+    value: currentCommands[key],
+  }));
 
+  const entry = formattedCommands.find((command) => command.name === name);
   return entry ? entry.name : null;
 };
 
@@ -54,10 +55,16 @@ export function loadCommand() {
 }
 
 // Save command
-export function saveCommand(commands) {
-  jsonfile.writeFileSync(config.COMMAND_FILE_LOCATION, commands, {
-    spaces: 4,
-  });
+export function saveCommand(commandsToSave) {
+  try {
+    jsonfile.writeFileSync(config.COMMAND_FILE_LOCATION, commandsToSave, {
+      spaces: 4,
+    });
+    // Reload the module-level commands variable to keep it in sync
+    commands = loadCommand();
+  } catch (err) {
+    throw new Error(`Failed to save commands: ${err.message}`);
+  }
 }
 
 // List commands
@@ -87,10 +94,25 @@ export async function listCommand() {
 // Add command
 export async function addCommand(name, cmd) {
   try {
-    commands[name] = cmd.join(' ');
+    const commandString = cmd.join(' ');
+    commands[name] = commandString;
 
     checkCommandFromList(commands[name], name);
     checkNewNameFromList(getCommandName(name));
+
+    // Warn about shell metacharacters for security
+    const DANGEROUS_CHARS = /[;&|`$()]/;
+    if (DANGEROUS_CHARS.test(commandString)) {
+      printWarning(
+        '\n⚠️  WARNING: Command contains shell metacharacters (;, &, |, `, $, (, )).'
+      );
+      printWarning(
+        'This could be dangerous if the command is not trusted.'
+      );
+      printWarning(
+        'Make sure you understand what this command does before running it.\n'
+      );
+    }
 
     printTitle(config.COMMANDS_ADD_TITLE);
 

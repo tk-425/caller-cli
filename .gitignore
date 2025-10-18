@@ -1,2 +1,4 @@
 node_modules/
-commands.json
+
+# User's command list (should not be tracked)
+caller-cli-commands.json

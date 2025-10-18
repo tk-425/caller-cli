@@ -2,8 +2,6 @@ import chalk from 'chalk';
 import {
   CLOSING_APP_MESSAGE,
   PRINT_EXECUTING_MESSAGE,
-  PROMPT_FORCE_CLOSE_ERROR_MESSAGE,
-  PROMPT_FORCE_CLOSE_MESSAGE,
 } from '../config.js';
 
 export function printSuccess(msg) {
@@ -12,15 +10,6 @@ export function printSuccess(msg) {
 
 export function printError(err) {
   console.log(`\n${redBrightText(err)}`);
-}
-
-export function printForceClosedError(err) {
-  if (err.message.includes(PROMPT_FORCE_CLOSE_ERROR_MESSAGE)) {
-    printError(PROMPT_FORCE_CLOSE_MESSAGE);
-    process.exit(1);
-  }
-
-  printError(err.message);
 }
 
 export function printRunningCommand(command) {
@@ -52,4 +41,12 @@ export function redBrightText(text) {
 
 export function printMessage(text) {
   console.log('\n', greenBrightText(text));
+}
+
+export function printNewline() {
+  console.log();
+}
+
+export function printWarning(text) {
+  console.warn(text);
 }
