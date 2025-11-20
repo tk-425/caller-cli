@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Skill(code-review)"
+      "Skill(code-review)",
+      "Skill(code-graph-skills)",
+      "Bash(stor health:*)",
+      "Bash(code-graph-skills health:*)",
+      "Bash(code-graph-skills init:*)",
+      "Bash(code-graph-skills graph:build:*)",
+      "Bash(code-graph-skills graph build:*)",
+      "Bash(code-graph-skills:*)"
     ],
     "deny": [],
     "ask": []
