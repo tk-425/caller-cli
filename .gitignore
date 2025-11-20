@@ -2,3 +2,7 @@ node_modules/
 
 # User's command list (should not be tracked)
 caller-cli-commands.json
+
+# code-graph
+.code-graph
+
