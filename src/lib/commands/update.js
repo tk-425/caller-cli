@@ -27,15 +27,15 @@ export async function update() {
     };
 
     const npmUpdateCommand = {
-      command: config.UPDATE_SH_COMMAND,
-      args: config.UPDATE_NPM_UPDATE_ARGS,
+      command: config.UPDATE_NPM_UPDATE_COMMAND,
+      args: [],
       successMessage: config.UPDATE_NPM_UPDATE_SUCCESS_MESSAGE,
       errorMessage: config.UPDATE_NPM_UPDATE_FAILED_MESSAGE,
     };
 
     const npmInstallCommand = {
-      command: config.UPDATE_SH_COMMAND,
-      args: config.UPDATE_NPM_INSTALL_ARGS,
+      command: config.UPDATE_NPM_INSTALL_COMMAND,
+      args: [],
       successMessage: config.UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE,
       errorMessage: config.UPDATE_NPM_INSTALLED_FAILED_MESSAGE,
     };
