@@ -26,13 +26,6 @@ export async function update() {
       errorMessage: config.UPDATE_CALLER_CLI_FAILED_MESSAGE,
     };
 
-    const npmUpdateCommand = {
-      command: config.UPDATE_NPM_UPDATE_COMMAND,
-      args: [],
-      successMessage: config.UPDATE_NPM_UPDATE_SUCCESS_MESSAGE,
-      errorMessage: config.UPDATE_NPM_UPDATE_FAILED_MESSAGE,
-    };
-
     const npmInstallCommand = {
       command: config.UPDATE_NPM_INSTALL_COMMAND,
       args: [],
@@ -43,7 +36,6 @@ export async function update() {
     await executeCommand([
       gitResetCommand,
       gitPullCommand,
-      npmUpdateCommand,
       npmInstallCommand,
     ]);
   } catch (err) {

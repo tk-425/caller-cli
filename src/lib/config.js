@@ -176,12 +176,9 @@ export const UPDATE_RESET_FAILED_MESSAGE = 'Error resetting branch';
 export const UPDATE_CALLER_CLI_SUCCESS_MESSAGE =
   'Caller CLI successfully updated.';
 export const UPDATE_CALLER_CLI_FAILED_MESSAGE = 'Caller CLI update failed.';
-export const UPDATE_NPM_UPDATE_COMMAND = `cd ${PROJECT_ROOT} && npm update --omit=dev`;
-export const UPDATE_NPM_UPDATE_SUCCESS_MESSAGE = 'NPM successfully updated.';
-export const UPDATE_NPM_UPDATE_FAILED_MESSAGE = 'NPM update failed.';
 export const UPDATE_NPM_INSTALL_COMMAND = `cd ${PROJECT_ROOT} && npm install --omit=dev`;
 export const UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE =
-  'NPM successfully installed.';
+  'NPM dependencies installed successfully.';
 export const UPDATE_NPM_INSTALLED_FAILED_MESSAGE = 'NPM installation failed.';
 
 // ERROR - CHECKING
