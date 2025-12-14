@@ -22,7 +22,10 @@ export async function executeCommand(commands) {
 
 export function runCommand(command, args, successMessage, errorMessage) {
   return new Promise((resolve, reject) => {
-    const process = spawn(command, args, { ...STDIO_INHERIT, shell: true });
+    // Concatenate command and args to avoid deprecation warning
+    // when using shell: true with separate args
+    const fullCommand = args.length > 0 ? `${command} ${args.join(' ')}` : command;
+    const process = spawn(fullCommand, { ...STDIO_INHERIT, shell: true });
 
     process.on('close', (code) => {
       if (code === 0) {

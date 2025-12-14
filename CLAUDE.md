@@ -46,7 +46,7 @@ Commands are organized in `src/lib/commands/`:
 
 ### Configuration
 All constants, messages, and configuration live in `src/lib/config.js`:
-- Current version: v1.5.1
+- Current version: v1.5.2
 - AI model: gemini-2.0-flash
 - Hard-coded paths reference `/usr/local/share/caller-cli`
 

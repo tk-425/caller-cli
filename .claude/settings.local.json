@@ -8,9 +8,16 @@
       "Bash(code-graph-skills init:*)",
       "Bash(code-graph-skills graph:build:*)",
       "Bash(code-graph-skills graph build:*)",
-      "Bash(code-graph-skills:*)"
+      "Bash(code-graph-skills:*)",
+      "Skill(codex-review)",
+      "SlashCommand(/codex-review)",
+      "mcp__codex__codex"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "codex"
+  ]
 }
