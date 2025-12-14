@@ -179,13 +179,13 @@ export const UPDATE_CALLER_CLI_FAILED_MESSAGE = 'Caller CLI update failed.';
 export const UPDATE_SH_COMMAND = 'sh';
 export const UPDATE_NPM_UPDATE_ARGS = [
   '-c',
-  `cd ${PROJECT_ROOT} && npm update --omit=dev && cd -`,
+  `cd ${PROJECT_ROOT} && npm update --omit=dev`,
 ];
 export const UPDATE_NPM_UPDATE_SUCCESS_MESSAGE = 'NPM successfully updated.';
 export const UPDATE_NPM_UPDATE_FAILED_MESSAGE = 'NPM update failed.';
 export const UPDATE_NPM_INSTALL_ARGS = [
   '-c',
-  `cd ${PROJECT_ROOT} && npm install --omit=dev && cd -`,
+  `cd ${PROJECT_ROOT} && npm install --omit=dev`,
 ];
 export const UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE =
   'NPM successfully installed.';
