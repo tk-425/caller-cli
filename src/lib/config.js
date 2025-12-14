@@ -4,7 +4,7 @@ import { dirname, join } from 'path';
 // Get the directory of the current module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const PROJECT_ROOT = join(__dirname, '../..');
+export const PROJECT_ROOT = join(__dirname, '../..');
 
 // Caller-CLI
 export const VERSION = 'v1.5.2';
