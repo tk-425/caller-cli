@@ -24,9 +24,13 @@ Caller-CLI is a handy command-line tool that makes your life easier by simplifyi
    ```bash
    sudo ln -s /usr/local/share/caller-cli/src/bin/caller.js /usr/local/bin/caller
    ```
-6. Install pnpm packages
+6. Install packages (using pnpm or npm)
    ```bash
+   # Using pnpm (recommended)
    cd .. && pnpm install --prod
+
+   # Or using npm
+   cd .. && npm install --omit=dev
    ```
 7. Restart your terminal
 8. Use `caller <command>` to run the Caller-CLI command
