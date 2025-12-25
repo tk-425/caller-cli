@@ -33,31 +33,31 @@ export async function update() {
       gitPullCommand,
     ]);
 
-    // Spawn new process for npm install to load updated code from disk
-    await runNpmInstallInNewProcess();
+    // Spawn new process for pnpm install to load updated code from disk
+    await runPnpmInstallInNewProcess();
   } catch (err) {
     handleErrors(err);
   }
 }
 
-function runNpmInstallInNewProcess() {
+function runPnpmInstallInNewProcess() {
   return new Promise((resolve, reject) => {
-    // Spawn new process with shell:true to run npm install
+    // Spawn new process with shell:true to run pnpm install
     // This process loads fresh code from disk after git pull
-    const command = `cd ${config.PROJECT_ROOT} && npm install --omit=dev`;
-    const npmProcess = spawn(command, { stdio: 'inherit', shell: true });
+    const command = `cd ${config.PROJECT_ROOT} && pnpm install --prod`;
+    const pnpmProcess = spawn(command, { stdio: 'inherit', shell: true });
 
-    npmProcess.on('close', (code) => {
+    pnpmProcess.on('close', (code) => {
       if (code === 0) {
         printSuccess(config.UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE);
         resolve(code);
       } else {
         printError(config.UPDATE_NPM_INSTALLED_FAILED_MESSAGE);
-        reject(new Error(`npm install failed with exit code ${code}`));
+        reject(new Error(`pnpm install failed with exit code ${code}`));
       }
     });
 
-    npmProcess.on('error', (err) => {
+    pnpmProcess.on('error', (err) => {
       printError(config.UPDATE_NPM_INSTALLED_FAILED_MESSAGE);
       reject(err);
     });

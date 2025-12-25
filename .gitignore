@@ -1,8 +1,23 @@
+# Dependencies
 node_modules/
 
+# npm
+package-lock.json
+npm-debug.log*
+
+# pnpm
+pnpm-debug.log*
+.pnpm-store/
+
 # User's command list (should not be tracked)
-caller-cli-commands.json
+caller-cli-commands.*
 
 # code-graph
 .code-graph
+
+# System files
+.DS_Store
+
+# Docs (user-specific)
+docs/
 
