@@ -3,12 +3,14 @@ import { execSync } from 'child_process';
 /**
  * Detects which package manager is available on the system
  * Checks for pnpm first, then falls back to npm
+ * Note: Uses 'which' to avoid triggering Corepack auto-install
  * @returns {Object} { manager: 'pnpm' | 'npm', installCommand: string }
  */
 export function detectPackageManager() {
   try {
-    // Try to execute 'pnpm --version' to check if pnpm is installed
-    execSync('pnpm --version', { stdio: 'ignore' });
+    // Use 'which' to check if pnpm binary exists without triggering Corepack
+    // This avoids the "Corepack is about to download" prompt
+    execSync('which pnpm', { stdio: 'ignore' });
     return {
       manager: 'pnpm',
       installCommand: 'pnpm install --prod',
