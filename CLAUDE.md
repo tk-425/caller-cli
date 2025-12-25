@@ -87,7 +87,9 @@ Custom error classes in `src/lib/errors/`:
 The update command runs:
 1. `git reset --hard origin/main` in `/usr/local/share/caller-cli`
 2. `git pull --rebase origin main`
-3. `pnpm install --prod`
+3. Auto-detects package manager (pnpm or npm) and runs appropriate install command
+   - If pnpm is available: `pnpm install --prod`
+   - If pnpm not available: `npm install --omit=dev`
 
 ## Development Guidelines
 

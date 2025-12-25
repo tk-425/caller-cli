@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 export const PROJECT_ROOT = join(__dirname, '../..');
 
 // Caller-CLI
-export const VERSION = 'v1.5.4';
+export const VERSION = 'v1.5.5';
 export const EXIT_OPTION = 'EXIT';
 export const COMMAND_FILE_LOCATION =
   process.env.CALLER_CLI_PATH ||
