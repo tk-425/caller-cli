@@ -14,13 +14,13 @@ Caller-CLI is a command-line productivity tool inspired by fig.io that provides:
 
 ### Testing
 ```bash
-npm test              # Run tests with vitest
+pnpm test             # Run tests with vitest
 ```
 
 ### Installation (Local Development)
 The CLI is designed to be installed globally at `/usr/local/share/caller-cli`. For development:
 ```bash
-npm install           # Install dependencies (use --omit=dev for production)
+pnpm install          # Install dependencies (use --prod for production)
 ```
 
 ### Running Locally
@@ -87,7 +87,7 @@ Custom error classes in `src/lib/errors/`:
 The update command runs:
 1. `git reset --hard origin/main` in `/usr/local/share/caller-cli`
 2. `git pull --rebase origin main`
-3. `npm update --omit=dev` or `npm install --omit=dev`
+3. `pnpm install --prod`
 
 ## Development Guidelines
 
@@ -101,7 +101,7 @@ The update command runs:
 ### Modifying Paths
 All installation paths are hard-coded to `/usr/local/share/caller-cli`. To change:
 - Update `COMMAND_FILE_LOCATION` in `config.js`
-- Update all git and npm command paths in update-related constants
+- Update all git and pnpm command paths in update-related constants
 - Update README.md installation instructions
 
 ### Testing

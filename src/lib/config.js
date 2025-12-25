@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 export const PROJECT_ROOT = join(__dirname, '../..');
 
 // Caller-CLI
-export const VERSION = 'v1.5.3';
+export const VERSION = 'v1.5.4';
 export const EXIT_OPTION = 'EXIT';
 export const COMMAND_FILE_LOCATION =
   process.env.CALLER_CLI_PATH ||
@@ -117,6 +117,7 @@ export const AI_ASK_ERROR_MESSAGE = 'AI Error';
 // AI - ALLOWED COMMANDS (whitelist for security)
 export const AI_ALLOWED_COMMANDS = [
   'npm',
+  'pnpm',
   'git',
   'ls',
   'cd',
@@ -176,10 +177,10 @@ export const UPDATE_RESET_FAILED_MESSAGE = 'Error resetting branch';
 export const UPDATE_CALLER_CLI_SUCCESS_MESSAGE =
   'Caller CLI successfully updated.';
 export const UPDATE_CALLER_CLI_FAILED_MESSAGE = 'Caller CLI update failed.';
-export const UPDATE_NPM_INSTALL_COMMAND = `cd ${PROJECT_ROOT} && npm install --omit=dev`;
+export const UPDATE_NPM_INSTALL_COMMAND = `cd ${PROJECT_ROOT} && pnpm install --prod`;
 export const UPDATE_NPM_INSTALLED_SUCCESS_MESSAGE =
-  'NPM dependencies installed successfully.';
-export const UPDATE_NPM_INSTALLED_FAILED_MESSAGE = 'NPM installation failed.';
+  'pnpm dependencies installed successfully.';
+export const UPDATE_NPM_INSTALLED_FAILED_MESSAGE = 'pnpm installation failed.';
 
 // ERROR - CHECKING
 export const COMMANDS_RENAME_NAMING_ERROR_MESSAGE =
