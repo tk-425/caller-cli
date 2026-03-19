@@ -1,53 +1,19 @@
-import inquirer from 'inquirer';
+import {
+  confirm,
+  input,
+  password,
+  select,
+} from '@inquirer/prompts';
 import { checkConfirmation, checkInput } from '../errors/errorChecking.js';
 import { printExit } from './print.js';
 import { EXIT_OPTION } from '../config.js';
 
-// LIST
-export const inquirerListPrompt = (name, message, choices, pageSize) => [
-  {
-    type: 'list',
-    name: name,
-    message: message,
-    choices: choices,
-    pageSize: pageSize,
-  },
-];
-
-// CONFIRM
-export const inquirerConfirmPrompt = (message) => [
-  {
-    type: 'confirm',
-    name: 'confirmation',
-    message: message,
-    default: false,
-  },
-];
-
-// INPUT
-export const inquirerInputPrompt = (name, message) => [
-  {
-    type: 'input',
-    name: name,
-    message: message,
-  },
-];
-
-// PASSWORD
-export const inquirerPasswordPrompt = (name, message) => [
-  {
-    type: 'password',
-    name: name,
-    message: message,
-    mask: '*',
-  },
-];
-
 // Process Inquirer Prompts
 export const processConfirm = async (message) => {
-  const { confirmation } = await inquirer.prompt(
-    inquirerConfirmPrompt(message)
-  );
+  const confirmation = await confirm({
+    message,
+    default: false,
+  });
 
   checkConfirmation(confirmation);
 
@@ -55,25 +21,33 @@ export const processConfirm = async (message) => {
 };
 
 export const processList = async (name, message, choices, pageSize) => {
-  const { cmd } = await inquirer.prompt(
-    inquirerListPrompt(name, message, choices, pageSize)
-  );
+  const cmd = await select({
+    name,
+    message,
+    choices,
+    pageSize,
+  });
 
   return cmd;
 };
 
 export const processInput = async (name, message) => {
-  const { input } = await inquirer.prompt(inquirerInputPrompt(name, message));
+  const response = await input({
+    name,
+    message,
+  });
 
-  checkInput(input);
+  checkInput(response);
 
-  return input;
+  return response;
 };
 
 export const processPassword = async (name, message) => {
-  const { apiKey } = await inquirer.prompt(
-    inquirerPasswordPrompt(name, message)
-  );
+  const apiKey = await password({
+    name,
+    message,
+    mask: '*',
+  });
 
   checkInput(apiKey);
 
