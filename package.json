@@ -20,7 +20,7 @@
     "inquirer": "^10.1.8",
     "jsonfile": "^6.1.0",
     "keytar": "^7.9.0",
-    "simple-git": "^3.25.0"
+    "simple-git": "^3.33.0"
   },
   "devDependencies": {
     "vitest": "^3.0.9"
