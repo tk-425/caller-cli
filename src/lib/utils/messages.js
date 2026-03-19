@@ -1,10 +1,10 @@
-import inquirer from 'inquirer';
+import { Separator } from '@inquirer/prompts';
 import { EXIT_OPTION, AI_INVALID_QUESTION_MESSAGE } from '../config.js';
 import { redBrightText, greenBrightText } from './print.js';
 
 // COMMANDS
 export const listPromptChoices = (options) => {
-  return [...options, new inquirer.Separator(), EXIT_OPTION];
+  return [...options, new Separator(), EXIT_OPTION];
 };
 export const addCommandConfirmationMessage = (name) => {
   return `Are you sure you want to add "${greenBrightText(name)}"?`;
