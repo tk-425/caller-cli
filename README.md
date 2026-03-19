@@ -35,6 +35,8 @@ Caller-CLI is a handy command-line tool that makes your life easier by simplifyi
 7. Restart your terminal
 8. Use `caller <command>` to run the Caller-CLI command
 
+Saved commands are stored in `~/.caller-cli/caller-cli-commands.json` by default.
+
 ## Commands
 
 ### List Commands

@@ -1,5 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { homedir } from 'os';
+import packageJson from '../../package.json' with { type: 'json' };
 
 // Get the directory of the current module
 const __filename = fileURLToPath(import.meta.url);
@@ -7,11 +9,12 @@ const __dirname = dirname(__filename);
 export const PROJECT_ROOT = join(__dirname, '../..');
 
 // Caller-CLI
-export const VERSION = 'v1.5.5';
+export const VERSION = `v${packageJson.version}`;
 export const EXIT_OPTION = 'EXIT';
+export const COMMANDS_DIRECTORY = join(homedir(), '.caller-cli');
 export const COMMAND_FILE_LOCATION =
   process.env.CALLER_CLI_PATH ||
-  join(PROJECT_ROOT, 'caller-cli-commands.json');
+  join(COMMANDS_DIRECTORY, 'caller-cli-commands.json');
 export const CLOSING_APP_MESSAGE = 'Exiting the Caller CLI. Goodbye!';
 
 // PROMPT NAME
