@@ -21,3 +21,22 @@ caller-cli-commands.*
 # Docs (user-specific)
 docs/
 
+
+# vmem
+.vmem/
+
+.codegraph/
+
+# AI Agents
+.rulez/
+.claude/
+.agent/
+.codex/
+.gemini/
+.opencode/
+.qwen/
+.mcp.json
+CLAUDE.md
+GEMINI.md
+QWEN.md
+AGENTS.md
