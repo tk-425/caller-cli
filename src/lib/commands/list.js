@@ -1,4 +1,6 @@
 import jsonfile from 'jsonfile';
+import { mkdirSync } from 'fs';
+import { dirname } from 'path';
 import { executeCommand } from '../utils/executeCommand.js';
 import { handleErrors } from '../errors/handleError.js';
 import {
@@ -57,6 +59,7 @@ export function loadCommand() {
 // Save command
 export function saveCommand(commandsToSave) {
   try {
+    mkdirSync(dirname(config.COMMAND_FILE_LOCATION), { recursive: true });
     jsonfile.writeFileSync(config.COMMAND_FILE_LOCATION, commandsToSave, {
       spaces: 4,
     });

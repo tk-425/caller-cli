@@ -47,8 +47,14 @@ describe('executeCommand', () => {
 
     // Verify that the mocked spawn function was called correctly
     expect(spawn).toHaveBeenCalledTimes(2);
-    expect(spawn).toHaveBeenNthCalledWith(1, 'echo', ['hello'], { ...STDIO_INHERIT, shell: true });
-    expect(spawn).toHaveBeenNthCalledWith(2, 'echo', ['world'], { ...STDIO_INHERIT, shell: true });
+    expect(spawn).toHaveBeenNthCalledWith(1, 'echo hello', {
+      ...STDIO_INHERIT,
+      shell: true,
+    });
+    expect(spawn).toHaveBeenNthCalledWith(2, 'echo world', {
+      ...STDIO_INHERIT,
+      shell: true,
+    });
   });
 
   // No. 2
@@ -92,7 +98,10 @@ describe('runCommand', () => {
     );
 
     expect(result).toBe(0);
-    expect(spawn).toHaveBeenCalledWith('echo', ['Hello World!'], { ...STDIO_INHERIT, shell: true });
+    expect(spawn).toHaveBeenCalledWith('echo Hello World!', {
+      ...STDIO_INHERIT,
+      shell: true,
+    });
   });
 
   // No. 2
@@ -154,8 +163,7 @@ describe('runCommand', () => {
 
     expect(result).toBe(0);
     expect(spawn).toHaveBeenCalledWith(
-      'echo',
-      ['arg1', 'arg2', 'arg3'],
+      'echo arg1 arg2 arg3',
       { ...STDIO_INHERIT, shell: true }
     );
   });
@@ -179,8 +187,7 @@ describe('runCommand', () => {
 
     expect(result).toBe(0);
     expect(spawn).toHaveBeenCalledWith(
-      'node',
-      ['-e', 'console.log(2 + 2)'],
+      'node -e console.log(2 + 2)',
       { ...STDIO_INHERIT, shell: true }
     );
   });
