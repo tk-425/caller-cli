@@ -104,8 +104,7 @@ export const GIT_PUSH_BRANCH_SUCCESS_MESSAGE = 'Push branch succeeded.';
 
 // AI
 export const AI_TITLE = '- AI -';
-// export const AI_GEMINI_MODEL = { model: 'gemini-1.5-flash' };
-export const AI_GEMINI_MODEL = { model: 'gemini-2.0-flash' };
+export const AI_GEMINI_MODEL = 'gemini-3-flash-preview';
 
 // AI - COMMANDS
 export const AI_COMMANDS_PROMPT_NAME = 'apiKey';

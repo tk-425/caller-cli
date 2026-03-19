@@ -1,5 +1,10 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { printMessage, printSuccess, printTitle, printNewline } from '../utils/print.js';
+import { GoogleGenAI } from '@google/genai';
+import {
+  printMessage,
+  printSuccess,
+  printTitle,
+  printNewline,
+} from '../utils/print.js';
 import { deleteKey, getKey, saveKey } from '../utils/keyManagement.js';
 import { executeCommand } from '../utils/executeCommand.js';
 import { aiPrompt } from '../utils/messages.js';
@@ -13,23 +18,7 @@ import {
 } from '../utils/prompts.js';
 import * as config from '../config.js';
 
-let model;
-
-// Validate Gemini API key format
-function validateGeminiKeyFormat(key) {
-  // Basic validation: Gemini keys are typically alphanumeric with underscores/hyphens
-  // and at least 20 characters long
-  if (!key || key.length < 20) {
-    return false;
-  }
-
-  // Check if key contains only valid characters
-  if (!/^[A-Za-z0-9_-]+$/.test(key)) {
-    return false;
-  }
-
-  return true;
-}
+let ai;
 
 export async function aiCommands() {
   try {
@@ -43,20 +32,12 @@ export async function aiCommands() {
         config.AI_COMMANDS_PROMPT_MESSAGE
       );
 
-      // Validate API key format before saving
-      if (!validateGeminiKeyFormat(password)) {
-        throw new Error(
-          'Invalid API key format. Gemini API keys should be at least 20 characters and contain only letters, numbers, underscores, and hyphens.'
-        );
-      }
-
-      saveKey(password);
+      await saveKey(password);
     }
 
-    const genAI = new GoogleGenerativeAI(password);
-    model = genAI.getGenerativeModel(config.AI_GEMINI_MODEL);
+    ai = new GoogleGenAI({ apiKey: password });
 
-    askAI();
+    await askAI();
   } catch (err) {
     handleErrors(err);
   }
@@ -69,8 +50,11 @@ async function askAI() {
       config.AI_ASK_PROMPT_MESSAGE
     );
 
-    const result = await model.generateContent(aiPrompt(input));
-    let commandString = result.response.text();
+    const response = await ai.models.generateContent({
+      model: config.AI_GEMINI_MODEL,
+      contents: aiPrompt(input),
+    });
+    const commandString = response.text;
 
     isAiQuestionValid(
       commandString.includes(config.AI_INVALID_QUESTION_MESSAGE)
@@ -123,7 +107,7 @@ export async function deleteAPIKey() {
     await processConfirm(config.AI_KEY_DELETE_CONFIRM_MESSAGE);
 
     await deleteKey();
-    
+
     printSuccess(config.AI_KEY_DELETE_MESSAGE);
   } catch (err) {
     handleErrors(err);
