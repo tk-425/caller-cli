@@ -34,6 +34,7 @@ vi.mock('../../lib/utils/messages.js', () => ({
   listPromptChoices: vi.fn(),
   addCommandConfirmationMessage: vi.fn(),
   addCommandSuccessMessage: vi.fn(),
+  editCommandSuccessMessage: vi.fn(),
   commandRemovedMessage: vi.fn(),
   renameCommandSuccessMessage: vi.fn(),
   removeCommandMessage: vi.fn(),
@@ -86,5 +87,49 @@ describe('list command storage', () => {
       commands,
       { spaces: 4 }
     );
+  });
+
+  it('updates an existing command when editing', async () => {
+    readFileSync.mockReturnValue({ deploy: 'pnpm build' });
+
+    const { editCommand } = await import('../../lib/commands/list.js');
+    const config = await import('../../lib/config.js');
+    const errorChecking = await import('../../lib/errors/errorChecking.js');
+    const messages = await import('../../lib/utils/messages.js');
+    const prompts = await import('../../lib/utils/prompts.js');
+
+    await editCommand('deploy', ['pnpm', 'build', '--prod']);
+
+    expect(errorChecking.checkCommandFromList).toHaveBeenCalledWith(
+      'pnpm build',
+      'deploy'
+    );
+    expect(prompts.processConfirm).toHaveBeenCalledWith(
+      config.COMMANDS_EDIT_CONFIRM_MESSAGE
+    );
+    expect(writeFileSync).toHaveBeenCalledWith(
+      config.COMMAND_FILE_LOCATION,
+      { deploy: 'pnpm build --prod' },
+      { spaces: 4 }
+    );
+    expect(messages.editCommandSuccessMessage).toHaveBeenCalledWith('deploy');
+  });
+
+  it('handles editing a missing command without writing', async () => {
+    readFileSync.mockReturnValue({});
+
+    const missingCommandError = new Error('No command found');
+    const errorChecking = await import('../../lib/errors/errorChecking.js');
+    const { handleErrors } = await import('../../lib/errors/handleError.js');
+    errorChecking.checkCommandFromList.mockImplementation(() => {
+      throw missingCommandError;
+    });
+
+    const { editCommand } = await import('../../lib/commands/list.js');
+
+    await editCommand('missing', ['echo', 'hello']);
+
+    expect(writeFileSync).not.toHaveBeenCalled();
+    expect(handleErrors).toHaveBeenCalledWith(missingCommandError);
   });
 });
