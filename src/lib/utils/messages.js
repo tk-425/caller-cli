@@ -12,6 +12,9 @@ export const addCommandConfirmationMessage = (name) => {
 export const addCommandSuccessMessage = (name) => {
   return `Command '${greenBrightText(name)}' added.`;
 };
+export const editCommandSuccessMessage = (name) => {
+  return `Command '${greenBrightText(name)}' updated.`;
+};
 export const noCommandMessage = (name) => {
   return `No command found with the name '${greenBrightText(name)}'`;
 };

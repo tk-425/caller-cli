@@ -4,6 +4,7 @@ import { program } from 'commander';
 
 import {
   addCommand,
+  editCommand,
   listCommand,
   runCommandFromList,
   removeCommand,
@@ -20,6 +21,12 @@ function main() {
     .command('add <name> <cmd...>')
     .description('Add a new command')
     .action((name, cmd) => addCommand(name, cmd));
+
+  // Edit command
+  program
+    .command('edit <name> <cmd...>')
+    .description('Edit a saved command')
+    .action((name, cmd) => editCommand(name, cmd));
 
   // List commands
   program

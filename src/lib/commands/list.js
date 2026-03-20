@@ -13,6 +13,7 @@ import {
   listPromptChoices,
   addCommandConfirmationMessage,
   addCommandSuccessMessage,
+  editCommandSuccessMessage,
   commandRemovedMessage,
   renameCommandSuccessMessage,
   removeCommandMessage,
@@ -33,6 +34,21 @@ import * as config from '../config.js';
 
 // Get the command list
 let commands = loadCommand();
+const DANGEROUS_COMMAND_CHARS = /[;&|`$()]/;
+
+function warnOnDangerousCommand(commandString) {
+  if (!DANGEROUS_COMMAND_CHARS.test(commandString)) {
+    return;
+  }
+
+  printWarning(
+    '\n⚠️  WARNING: Command contains shell metacharacters (;, &, |, `, $, (, )).'
+  );
+  printWarning('This could be dangerous if the command is not trusted.');
+  printWarning(
+    'Make sure you understand what this command does before running it.\n'
+  );
+}
 
 // Get the user-defined command name
 const getCommandName = (name) => {
@@ -104,18 +120,7 @@ export async function addCommand(name, cmd) {
     checkNewNameFromList(getCommandName(name));
 
     // Warn about shell metacharacters for security
-    const DANGEROUS_CHARS = /[;&|`$()]/;
-    if (DANGEROUS_CHARS.test(commandString)) {
-      printWarning(
-        '\n⚠️  WARNING: Command contains shell metacharacters (;, &, |, `, $, (, )).'
-      );
-      printWarning(
-        'This could be dangerous if the command is not trusted.'
-      );
-      printWarning(
-        'Make sure you understand what this command does before running it.\n'
-      );
-    }
+    warnOnDangerousCommand(commandString);
 
     printTitle(config.COMMANDS_ADD_TITLE);
 
@@ -124,6 +129,28 @@ export async function addCommand(name, cmd) {
     saveCommand(commands);
 
     printSuccess(addCommandSuccessMessage(name));
+  } catch (err) {
+    handleErrors(err);
+  }
+}
+
+// Edit command
+export async function editCommand(name, cmd) {
+  try {
+    const commandString = cmd.join(' ');
+
+    checkCommandFromList(commands[name], name);
+
+    warnOnDangerousCommand(commandString);
+
+    printTitle(config.COMMANDS_EDIT_TITLE);
+
+    await processConfirm(config.COMMANDS_EDIT_CONFIRM_MESSAGE);
+
+    commands[name] = commandString;
+    saveCommand(commands);
+
+    printSuccess(editCommandSuccessMessage(name));
   } catch (err) {
     handleErrors(err);
   }

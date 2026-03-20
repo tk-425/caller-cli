@@ -30,6 +30,11 @@ export const COMMANDS_LIST_PROMPT_MESSAGE = 'Select command';
 export const COMMANDS_ADD_TITLE = '- Add -';
 export const COMMANDS_ADD_CANCELLED_MESSAGE = 'Command added cancelled.';
 
+// LIST - EDIT
+export const COMMANDS_EDIT_TITLE = '- Edit -';
+export const COMMANDS_EDIT_CONFIRM_MESSAGE =
+  'Are you sure you want to update this command?';
+
 // LIST - RENAME
 export const COMMANDS_RENAME_TITLE = '- Rename -';
 export const COMMANDS_RENAME_CONFIRM_MESSAGE =
