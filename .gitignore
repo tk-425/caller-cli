@@ -32,15 +32,14 @@ docs/
 .claude/
 .agents/
 .codex/
-.gemini/
 .opencode/
-.qwen/
+.pi/
 .mcp.json
+opencode.json
 CLAUDE.md
-GEMINI.md
-QWEN.md
 AGENTS.md
 CONTEXT.md
+
 
 .devflow/
 .devflow-archive/
