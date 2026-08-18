@@ -30,7 +30,7 @@ docs/
 # AI Agents
 .rulez/
 .claude/
-.agent/
+.agents/
 .codex/
 .gemini/
 .opencode/
