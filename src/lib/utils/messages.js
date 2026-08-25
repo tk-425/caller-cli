@@ -58,8 +58,8 @@ export const aiPrompt = (question) => {
 };
 
 // PROCESS
-export const processNonZeroCodeMessage = (code) => {
-  return `Command failed with exit code ${code}`;
+export const processNonZeroCodeMessage = (command, code) => {
+  return `Command failed: ${command} with exit code ${code}`;
 };
 export const processErrorMessage = (errorMessage, processErrorMessage) => {
   return `${errorMessage}: ${processErrorMessage}`;

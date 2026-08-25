@@ -1,3 +1,23 @@
+# Agent config
+.agents/
+.claude/
+.codex/
+.opencode/
+.pi/
+AGENTS.md
+CLAUDE.md
+
+# Docs
+.docs/
+
+# Tool output
+graphify-out/
+
+# Tool config
+.mcp.json
+opencode.json
+.graphifyignore
+
 # Dependencies
 node_modules/
 
@@ -14,32 +34,20 @@ caller-cli-commands.*
 
 # code-graph
 .code-graph
+.codegraph/
 
 # System files
 .DS_Store
 
 # Docs (user-specific)
-docs/
-
-
-# vmem
-.vmem/
-
-.codegraph/
+docs
 
 # AI Agents
-.rulez/
-.claude/
-.agents/
-.codex/
-.opencode/
-.pi/
-.mcp.json
-opencode.json
-CLAUDE.md
-AGENTS.md
 CONTEXT.md
 
-
+# devflow
 .devflow/
 .devflow-archive/
+
+.pipeline/
+.pipeline-archive/
