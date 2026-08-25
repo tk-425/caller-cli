@@ -121,7 +121,7 @@ describe('runCommand', () => {
         'runCommand: This should not success',
         'runCommand: Command failed'
       )
-    ).rejects.toThrow(RunCommandError);
+    ).rejects.toThrow('Command failed: node -e process.exit(1) with exit code 1');
   });
 
   // No. 3

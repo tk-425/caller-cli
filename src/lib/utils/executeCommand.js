@@ -32,7 +32,7 @@ export function runCommand(command, args, successMessage, errorMessage) {
         printSuccess(successMessage);
         resolve(code);
       } else {
-        reject(new RunCommandError(processNonZeroCodeMessage(code)));
+        reject(new RunCommandError(processNonZeroCodeMessage(fullCommand, code)));
       }
     });
 

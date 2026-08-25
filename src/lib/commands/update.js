@@ -4,6 +4,7 @@ import { executeCommand } from '../utils/executeCommand.js';
 import { handleErrors } from '../errors/handleError.js';
 import { processConfirm } from '../utils/prompts.js';
 import { detectPackageManager } from '../utils/packageManager.js';
+import { processNonZeroCodeMessage } from '../utils/messages.js';
 import * as config from '../config.js';
 
 export async function update() {
@@ -41,7 +42,7 @@ export async function update() {
   }
 }
 
-function runPackageInstallInNewProcess() {
+export function runPackageInstallInNewProcess() {
   return new Promise((resolve, reject) => {
     // Detect which package manager is available (pnpm or npm)
     const { manager, installCommand } = detectPackageManager();
@@ -57,7 +58,7 @@ function runPackageInstallInNewProcess() {
         resolve(code);
       } else {
         printError(`${manager} installation failed.`);
-        reject(new Error(`${manager} install failed with exit code ${code}`));
+        reject(new Error(processNonZeroCodeMessage(command, code)));
       }
     });
 
