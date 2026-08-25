@@ -1,5 +1,7 @@
-onlyBuiltDependencies:
-  - keytar
+allowBuilds:
+  esbuild: true
+  keytar: true
+  protobufjs: true
 overrides:
   picomatch@>=4.0.0 <4.0.4: '>=4.0.4'
   postcss@<8.5.10: '>=8.5.10'
